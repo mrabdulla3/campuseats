@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const LoginSignup = () => {
   const [isSignup, setIsSignup] = useState(false);
+  const [isRestaurant, setIsRestaurant] = useState(false); // State to track if user is a restaurant
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-purple-50">
@@ -61,10 +62,67 @@ const LoginSignup = () => {
                     <input
                       type="checkbox"
                       className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                      onChange={() => setIsRestaurant(!isRestaurant)} // Toggle restaurant checkbox
                     />
-                    <span className="ml-2 text-sm text-gray-600">Are you a Vendor</span>
+                    <span className="ml-2 text-sm text-gray-600">Are you a Restaurant?</span>
                   </label>
                 </div>
+
+                {isRestaurant && ( // Conditionally render restaurant-specific fields
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="restaurantName" className="block text-sm font-medium text-gray-700">
+                        Restaurant Name
+                      </label>
+                      <input
+                        type="text"
+                        id="restaurantName"
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="openingTime" className="block text-sm font-medium text-gray-700">
+                        Opening Time
+                      </label>
+                      <input
+                        type="time"
+                        id="openingTime"
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="closingTime" className="block text-sm font-medium text-gray-700">
+                        Closing Time
+                      </label>
+                      <input
+                        type="time"
+                        id="closingTime"
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                        Address
+                      </label>
+                      <input
+                        type="text"
+                        id="address"
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
+                        Contact Number
+                      </label>
+                      <input
+                        type="text"
+                        id="contact"
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
