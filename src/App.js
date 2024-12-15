@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react
 import Cart from './pages/Cart';
 import LoginSignup from './pages/LoginSignup';
 import Menu from './pages/Menu';
+import CustomerProfile from './pages/CustomerProfile';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/profile" element={<CustomerProfile />} />
         </Routes>
       </Router>
     </>
