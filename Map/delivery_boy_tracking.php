@@ -25,7 +25,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Track Customer</title>
   <link href="style.css" rel="stylesheet">
-  <script src="https://apis.mapmyindia.com/advancedmaps/v1/62b180d89452f2b3f398d6d794c7e872/map_load?v=1.5"></script>
+  <script src="https://apis.mapmyindia.com/advancedmaps/v1/<API KEY>/map_load?v=1.5"></script>
   <script>
     let map;
     let customerMarker;
