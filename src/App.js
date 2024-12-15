@@ -10,6 +10,7 @@ import Cart from './pages/Cart';
 import LoginSignup from './pages/LoginSignup';
 import Menu from './pages/Menu';
 import CustomerProfile from './pages/CustomerProfile';
+import VendorDashboard from './pages/VendorDashboard';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Header />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<VendorDashboard />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/menu" element={<Menu />} />

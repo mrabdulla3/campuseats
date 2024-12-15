@@ -56,6 +56,15 @@ const LoginSignup = () => {
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
+                <div>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-600">Are you a Vendor</span>
+                  </label>
+                </div>
                 <button
                   type="submit"
                   className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
