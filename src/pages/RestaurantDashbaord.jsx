@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaSearch, FaCog, FaBell, FaPowerOff } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 
-const VendorDashboard = () => {
+const RestaurantDashboard = () => {
   const [showAddDishModal, setShowAddDishModal] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -224,4 +224,4 @@ const VendorDashboard = () => {
   );
 };
 
-export default VendorDashboard;
+export default RestaurantDashboard;
