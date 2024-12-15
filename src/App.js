@@ -8,6 +8,7 @@ import Navbar from './component/navbar';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Cart from './pages/Cart';
 import LoginSignup from './pages/LoginSignup';
+import Menu from './pages/Menu';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginSignup />} />
+          <Route path="/menu" element={<Menu />} />
         </Routes>
       </Router>
     </>

@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
       {/* Logo */}
-      <div className="text-2xl font-bold text-purple-700">CampusEats</div>
+      <Link to="/"><div className="text-2xl font-bold text-purple-700">CampusEats</div></Link>
 
       {/* Search Bar */}
       <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-lg">
@@ -30,11 +30,11 @@ const Navbar = () => {
 
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
-        <Link to="" className="hover:text-purple-700">
-          Restaurants
+        <Link to="/menu" className="hover:text-purple-700">
+          Menu
         </Link>
         <Link to="" className="hover:text-purple-700">
-          Offers
+          Restaurants
         </Link>
         <Link to="/cart" className="hover:text-purple-700">
           Cart
