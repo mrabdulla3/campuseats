@@ -1,11 +1,37 @@
 import React, { useState } from "react";
-import { FaSearch, FaCog, FaBell, FaPowerOff } from "react-icons/fa";
+import { FaSearch, FaBell } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
+import { useEffect } from "react";
 
 const RestaurantDashboard = () => {
+  const [orders, setOrders] = useState([]);
   const [showAddDishModal, setShowAddDishModal] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [vendor_id, setVendorId] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [image_url, setImageUrl] = useState("");
+  const [availability, setAvailability] = useState("");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/orders/");
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        const data = await response.json();
+        setOrders(data); 
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   const toggleAddDishModal = () => {
     setShowAddDishModal(!showAddDishModal);
@@ -19,6 +45,52 @@ const RestaurantDashboard = () => {
     setShowNotificationModal(!showNotificationModal);
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!name || !description || !price || !category) {
+      console.error("Please fill all the fields");
+      return;
+    }
+
+    setIsSubmitting(true); 
+    try {
+      const response = await fetch("http://localhost:4000/menu/post-menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vendor_id,
+          name,
+          description,
+          price,
+          category,
+          image_url,
+          availability,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Form submitted successfully");
+        toggleAddDishModal();
+        setVendorId("");
+        setName("");
+        setDescription("");
+        setPrice("");
+        setCategory("");
+        setAvailability("");
+        setImageUrl("");
+      } else {
+        console.error("Error submitting menu:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    } finally {
+      setIsSubmitting(false); 
+    }
+  };
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -72,9 +144,16 @@ const RestaurantDashboard = () => {
           </div>
           <div className="flex items-center space-x-4">
             <label htmlFor="">Total Earnings : $0</label>
-            <button className="text-gray-600" onClick={toggleNotificationModal}><FaBell /></button>
-            <button className={`text-white px-4 py-2 rounded-lg ${isOnline ? 'bg-green-500' : 'bg-red-500'}`} onClick={toggleOnlineStatus}>
-              {isOnline ? 'Online' : 'Offline'}
+            <button className="text-gray-600" onClick={toggleNotificationModal}>
+              <FaBell />
+            </button>
+            <button
+              className={`text-white px-4 py-2 rounded-lg ${
+                isOnline ? "bg-green-500" : "bg-red-500"
+              }`}
+              onClick={toggleOnlineStatus}
+            >
+              {isOnline ? "Online" : "Offline"}
             </button>
           </div>
         </header>
@@ -122,103 +201,157 @@ const RestaurantDashboard = () => {
               <thead>
                 <tr className="bg-gray-200 text-gray-600 text-sm">
                   <th className="p-4 text-left">Order ID</th>
-                  <th className="p-4 text-left">Token No</th>
-                  <th className="p-4 text-left">Agent</th>
-                  <th className="p-4 text-left">Order By</th>
-                  <th className="p-4 text-left">Duration</th>
+                  <th className="p-4 text-left">User Id</th>
                   <th className="p-4 text-left">Amount</th>
-                  <th className="p-4 text-left">Action</th>
+                  <th className="p-4 text-left">Status</th>
+                  <th className="p-4 text-left">Delivery Address</th>
+                  <th className="p-4 text-left">Payment Status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="text-sm text-gray-600 border-b hover:bg-gray-100 transition-colors">
-                  <td className="p-4">878656</td>
-                  <td className="p-4">123</td>
-                  <td className="p-4">Zomato</td>
-                  <td className="p-4">John Doe</td>
-                  <td className="p-4">00:30:00</td>
-                  <td className="p-4">$25.09</td>
-                  <td className="p-4">
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105">
-                      View
-                    </button>
-                  </td>
-                </tr>
+                {/* Map through orders and display them */}
+                {orders.length > 0 ? (
+                  orders.map((order) => (
+                    <tr
+                      key={order.id}
+                      className="text-sm text-gray-600 border-b hover:bg-gray-100 transition-colors"
+                    >
+                      <td className="p-4">{order.id}</td>
+                      <td className="p-4">{order.user_id}</td>
+                      <td className="p-4">{order.total_price}</td>
+                      <td className="p-4">{order.status}</td>
+                      <td className="p-4">{order.delivery_address}</td>
+                      <td className="p-4">${order.payment_status}</td>
+                      <td className="p-4">
+                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center p-4 text-gray-600">
+                      No orders found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
+        </section>
+        {/* Menu Section */}
+        <div className="bg-white shadow rounded-lg p-4 mt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              onClick={toggleAddDishModal}
+            >
+              Add Dish
+            </button>
+          </div>
 
-          {/* Menu Section */}
-          <div className="bg-white shadow rounded-lg p-4 mt-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">Menu</h2>
-              <button
-                onClick={toggleAddDishModal}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105"
-              >
-                Add Dish
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-            <img src="" alt="" className="w-full h-40 object-cover rounded-t-lg" />
-              <div className="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 transition-colors">
-                <h3 className="text-lg font-semibold">Dish Name</h3>
-                <p className="text-sm text-gray-600">Description of the dish goes here.</p>
-                <p className="text-sm font-bold mt-2">Price: $12.99</p>
+          {/* Add Dish Modal */}
+          {showAddDishModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[90vh] overflow-y-auto">
+                <h2 className="text-xl font-bold mb-4">Add New Dish</h2>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">
+                      Vender Id
+                    </label>
+                    <input
+                      type="text"
+                      value={vendor_id}
+                      onChange={(e) => setVendorId(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">
+                      Dish Name
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">
+                      Description
+                    </label>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">Price</label>
+                    <input
+                      type="text"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">
+                      Availability
+                    </label>
+                    <input
+                      type="text"
+                      value={availability}
+                      onChange={(e) => setAvailability(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium">Image</label>
+                    <input
+                      type="file"
+                      onChange={(e) => setImageUrl(e.target.files)}
+                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={toggleAddDishModal}
+                      className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-4"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`bg-blue-500 text-white px-4 py-2 rounded-lg ${
+                        isSubmitting ? "opacity-50" : ""
+                      }`}
+                    >
+                      {isSubmitting ? "Submitting..." : "Submit"}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Add Dish Modal */}
-        {showAddDishModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-              <h2 className="text-xl font-bold mb-4">Add New Dish</h2>
-              <form>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Dish Name</label>
-                  <input
-                    type="text"
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Description</label>
-                  <textarea
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                  ></textarea>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Price</label>
-                  <input
-                    type="number"
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Image</label>
-                  <input
-                    type="file"
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                  />
-                </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg"
-                    onClick={toggleAddDishModal}
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );

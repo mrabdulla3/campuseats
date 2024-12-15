@@ -1,4 +1,8 @@
 import React from 'react';
+import img1 from '../assets/1.jpg';
+import img2 from '../assets/5.jpg';
+import img3 from '../assets/6.jpg';
+import img4 from '../assets/7.jpg';
 
 const CampusEats = () => {
   return (
@@ -30,7 +34,7 @@ const CampusEats = () => {
               rating: '4.8',
               type: 'Café',
               time: '15-25 min',
-              image: 'https://via.placeholder.com/150',
+              image: img1,
             },
             {
               name: 'Burger Joint',
@@ -38,7 +42,7 @@ const CampusEats = () => {
               rating: '4.5',
               type: 'American',
               time: '20-30 min',
-              image: 'https://via.placeholder.com/150',
+              image: img2,
             },
             {
               name: 'Wing Station',
@@ -46,7 +50,7 @@ const CampusEats = () => {
               rating: '4.6',
               type: 'American',
               time: '25-35 min',
-              image: 'https://via.placeholder.com/150',
+              image: img3,
             },
             {
               name: 'Sweet Treats',
@@ -54,7 +58,7 @@ const CampusEats = () => {
               rating: '4.7',
               type: 'Desserts',
               time: '20-30 min',
-              image: 'https://via.placeholder.com/150',
+              image: img4,
             },
           ].map((restaurant) => (
             <div key={restaurant.name} className="bg-white shadow-md rounded-md overflow-hidden">

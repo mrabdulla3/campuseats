@@ -1,9 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 
 const LoginSignup = () => {
   const [isSignup, setIsSignup] = useState(false);
-  const [isRestaurant, setIsRestaurant] = useState(false); // State to track if user is a restaurant
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    userType: "user", 
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+  const navigate = useNavigate(); 
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleUserTypeChange = (e) => {
+    setFormData({
+      ...formData,
+      userType: e.target.value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    try {
+      if (isSignup) {
+        const endpoint =
+          formData.userType === "vendor"
+            ? "http://localhost:4000/vendors/signup-vendor"
+            : "http://localhost:4000/users/signup-customer";
+  
+        // Make the API call
+        const response = await axios.post(endpoint, {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          userType: formData.userType,
+        });
+  
+        setSuccess(response.data.message || "Registration successful!");
+        localStorage.setItem("userType", formData.userType);
+  
+        if (formData.userType === "vendor") {
+          navigate("/dashboard");  
+        } else {
+          navigate("/"); 
+        }
+      } else {
+        const { email, password } = formData;
+        const response = await axios.post("http://localhost:4000/users/login", {
+          email,
+          password,
+        });
+  
+        setSuccess(response.data.message || "Login successful!");
+        localStorage.setItem("token", response.data.token);
+  
+        const userType = response.data.userType; 
+        localStorage.setItem("userType", userType);
+  
+        if (userType === "vendor") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "An error occurred");
+    }
+  };  
   return (
     <div className="flex items-center justify-center min-h-screen bg-purple-50">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden flex">
@@ -17,7 +91,7 @@ const LoginSignup = () => {
             onClick={() => setIsSignup(!isSignup)}
             className="bg-white text-purple-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100"
           >
-            {isSignup ? 'SIGN IN' : 'REGISTER'}
+            {isSignup ? "SIGN IN" : "REGISTER"}
           </button>
         </div>
 
@@ -26,7 +100,7 @@ const LoginSignup = () => {
           {isSignup ? (
             <>
               <h2 className="text-2xl font-bold text-purple-600 mb-6">Sign Up</h2>
-              <form className="space-y-4">
+              <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                     Name
@@ -34,6 +108,8 @@ const LoginSignup = () => {
                   <input
                     type="text"
                     id="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
@@ -44,6 +120,8 @@ const LoginSignup = () => {
                   <input
                     type="email"
                     id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
@@ -54,74 +132,25 @@ const LoginSignup = () => {
                   <input
                     type="password"
                     id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
                 <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-                      onChange={() => setIsRestaurant(!isRestaurant)} // Toggle restaurant checkbox
-                    />
-                    <span className="ml-2 text-sm text-gray-600">Are you a Restaurant?</span>
+                  <label htmlFor="userType" className="block text-sm font-medium text-gray-700">
+                    User Type
                   </label>
+                  <select
+                    id="userType"
+                    value={formData.userType}
+                    onChange={handleUserTypeChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="user">Customer</option>
+                    <option value="vendor">Vendor</option>
+                  </select>
                 </div>
-
-                {isRestaurant && ( // Conditionally render restaurant-specific fields
-                  <div className="space-y-4">
-                    <div>
-                      <label htmlFor="restaurantName" className="block text-sm font-medium text-gray-700">
-                        Restaurant Name
-                      </label>
-                      <input
-                        type="text"
-                        id="restaurantName"
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="openingTime" className="block text-sm font-medium text-gray-700">
-                        Opening Time
-                      </label>
-                      <input
-                        type="time"
-                        id="openingTime"
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="closingTime" className="block text-sm font-medium text-gray-700">
-                        Closing Time
-                      </label>
-                      <input
-                        type="time"
-                        id="closingTime"
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        id="address"
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
-                        Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        id="contact"
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <button
                   type="submit"
@@ -134,7 +163,7 @@ const LoginSignup = () => {
           ) : (
             <>
               <h2 className="text-2xl font-bold text-purple-600 mb-6">Sign In</h2>
-              <form className="space-y-4">
+              <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     Email
@@ -142,6 +171,8 @@ const LoginSignup = () => {
                   <input
                     type="email"
                     id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
@@ -152,30 +183,22 @@ const LoginSignup = () => {
                   <input
                     type="password"
                     id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
                   />
-                </div>
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                  </label>
-                  <a href="#" className="text-sm text-purple-600 hover:underline">
-                    Forgot password?
-                  </a>
                 </div>
                 <button
                   type="submit"
                   className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
                 >
-                  LOGIN
+                  SIGN IN
                 </button>
               </form>
             </>
           )}
+          {error && <p className="text-red-500 mt-4">{error}</p>}
+          {success && <p className="text-green-500 mt-4">{success}</p>}
         </div>
       </div>
     </div>
