@@ -5,18 +5,14 @@ $dbname = 'food_delivery';  // Database name
 $username = 'root';         // Database username
 $password = '';             // Database password (leave blank if none)
 
-try {
-    // Create a new PDO connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+// Create a MySQLi connection
+$conn = mysqli_connect($host, $username, $password, $dbname);
 
-    // Set PDO error mode to exception for better error handling
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Uncomment for debugging purposes (optional)
-    // echo "Connected successfully!";
-} catch (PDOException $e) {
-    // Display error message if connection fails
-    echo "Database connection failed: " . $e->getMessage();
-    exit;
+// Check the connection
+if (!$conn) {
+    die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . mysqli_connect_error()]));
 }
+
+// Uncomment for debugging purposes (optional)
+// echo "Connected successfully!";
 ?>
