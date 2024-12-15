@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -14,9 +15,9 @@ const Home = () => {
             Order food from your favorite campus restaurants and get it
             delivered to your dorm or study spot.
           </p>
-          <button className="px-6 py-3 bg-white text-purple-700 font-bold rounded hover:bg-gray-200 transition duration-300">
+          <Link to="/menu" className="px-6 py-3 bg-white text-purple-700 font-bold rounded hover:bg-gray-200 transition duration-300">
             Order Now
-          </button>
+          </Link>
         </div>
 
         {/* Right Image Section */}
