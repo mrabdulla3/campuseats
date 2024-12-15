@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Boy - Track Customer</title>
+    <script src="https://apis.mapmyindia.com/advancedmaps/v1/<API KEY>/map_load?v=1.5"></script>
+    <script>
+        let map;
+        let customerMarker;
+        let deliveryBoyMarker;
+
+        function initMap() {
+            // Initialize the map with a default center (Delhi)
+            map = new MapmyIndia.Map("map", {
+                center: [28.6139, 77.2090],
+                zoom: 20, // Adjust zoom level as needed
+            });
+
+            // Initial fetch to get the customer and delivery boy location
+            fetchDeliveryBoyAndCustomerLocation();
+
+            // Set up continuous polling for delivery boy's location (every 5 seconds)
+            setInterval(fetchDeliveryBoyAndCustomerLocation, 5000);
+        }
+
+        // Fetch both the delivery boy and customer locations
+        function fetchDeliveryBoyAndCustomerLocation() {
+            fetch('/get_locations.php?delivery_boy_id=1') // Replace with your API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const customerLocation = data.customer_location;
+                        const deliveryBoyLocation = data.delivery_boy_location;
+
+                        // Add or update customer marker
+                        if (!customerMarker) {
+                            customerMarker = new L.Marker([customerLocation.customer_latitude, customerLocation.customer_longitude]); // Use L.Marker (lowercase "L")
+                            customerMarker.addTo(map);
+                            customerMarker.bindPopup("Customer Location").openPopup();
+                        } else {
+                            customerMarker.setPosition([customerLocation.customer_latitude, customerLocation.customer_longitude]);
+                        }
+
+                        // Add or update delivery boy marker
+                        if (!deliveryBoyMarker) {
+                            deliveryBoyMarker = new L.Marker([deliveryBoyLocation.delivery_latitude, deliveryBoyLocation.delivery_longitude]); // Use L.Marker (lowercase "L")
+                            deliveryBoyMarker.addTo(map);
+                            deliveryBoyMarker.bindPopup("Delivery Boy's Location").openPopup();
+
+                        } else {
+                            deliveryBoyMarker.setPosition([deliveryBoyLocation.delivery_latitude, deliveryBoyLocation.delivery_longitude]);
+                        }
+                        updateDeliveryBoyLocation();
+                        // Show or update the route between the delivery boy and the customer
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch(error => console.error("Error fetching locations:", error));
+        }
+        function updateDeliveryBoyLocation() {
+      setInterval(() => {
+        // Get the delivery boy's current position using Geolocation API
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+
+              // Update the marker on the map with the new location
+              deliveryBoyLat = latitude;
+              deliveryBoyLng = longitude;
+
+              // Update the marker on the map
+              deliveryBoyMarker.setLatLng([latitude, longitude]);
+
+              // Send the new coordinates to the server to update in the database
+              fetch('/update_location.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  delivery_boy_id: 1, // Change to dynamic delivery boy ID
+                  latitude: latitude,
+                  longitude: longitude
+                })
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.status !== 'success') {
+                    console.error('Failed to update location');
+                  }
+                })
+                .catch(error => console.error("Error:", error));
+            },
+            function (error) {
+              console.error("Geolocation error:", error);
+            }
+          );
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }, 1000); // Update every 5 seconds (5000 ms)
+    }
+
+    </script>
+</head>
+
+<body onload="initMap()">
+    <h1>Track Delivery Boy and Customer</h1>
+    <div id="map" style="width: 100%; height: 500px;"></div> <!-- Map container -->
+</body>
+
+</html>
