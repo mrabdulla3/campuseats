@@ -23,7 +23,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
       {/* Logo */}
-      <Link to="#">
+      <Link to="/">
         <div className="text-2xl font-bold text-purple-700">CampusEats</div>
       </Link>
 
