@@ -76,19 +76,19 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
         })
         .catch(error => console.error("Error fetching locations:", error));
     }
-    function updateDeliveryBoyLocation() {
-      setInterval(() => {
-        // Get the delivery boy's current position using Geolocation API
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            function (position) {
-              const latitude = position.coords.latitude;
-              const longitude = position.coords.longitude;
+  function updateDeliveryBoyLocation() {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by this browser.");
+    return;
+  }
 
-              // Update the marker on the map with the new location
-              deliveryBoyLat = latitude;
-              deliveryBoyLng = longitude;
+  setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
+<<<<<<< HEAD
               // Update the marker on the map
               deliveryBoyMarker.setLatLng([latitude, longitude]);
 
@@ -116,11 +116,42 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
               console.error("Geolocation error:", error);
             }
           );
+=======
+        // Update delivery boy marker on the map
+        if (deliveryBoyMarker) {
+          deliveryBoyMarker.setLatLng([latitude, longitude]);
+>>>>>>> 3c8d981d9c19ea90014b44fd293c1a8edf7b19a4
         } else {
-          alert("Geolocation is not supported by this browser.");
+          deliveryBoyMarker = new L.Marker([latitude, longitude]);
+          deliveryBoyMarker.addTo(map);
+          deliveryBoyMarker.bindPopup("Your Location").openPopup();
         }
-      }, 1000); // Update every 5 seconds (5000 ms)
-    }
+
+        // Send updated coordinates to the server
+        fetch('/update_location.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            delivery_boy_id: <?php echo $id; ?>,
+            latitude: latitude,
+            longitude: longitude
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status !== 'success') {
+              console.error('Failed to update location on the server:', data.message);
+            }
+          })
+          .catch(error => console.error("Error updating location:", error));
+      },
+      function (error) {
+        console.error("Geolocation error:", error.message);
+      },
+      { enableHighAccuracy: true } // High accuracy for precise location
+    );
+  }, 1000); // Poll every 5 seconds
+}
 
   </script>
 </head>
