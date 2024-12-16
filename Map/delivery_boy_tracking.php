@@ -76,7 +76,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
         })
         .catch(error => console.error("Error fetching locations:", error));
     }
-  function updateDeliveryBoyLocation() {
+    function updateDeliveryBoyLocation() {
   if (!navigator.geolocation) {
     alert("Geolocation is not supported by this browser.");
     return;
@@ -88,39 +88,9 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-<<<<<<< HEAD
-              // Update the marker on the map
-              deliveryBoyMarker.setLatLng([latitude, longitude]);
-
-              // Send the new coordinates to the server to update in the database
-              fetch('/update_location.php', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  delivery_boy_id: <?php echo $id; ?>, // Change to dynamic delivery boy ID
-                  latitude: latitude,
-                  longitude: longitude
-                })
-              })
-                .then(response => response.json())
-                .then(data => {
-                  if (data.status !== 'success') {
-                    console.error('Failed to update location');
-                  }
-                })
-                .catch(error => console.error("Error:", error));
-            },
-            function (error) {
-              console.error("Geolocation error:", error);
-            }
-          );
-=======
         // Update delivery boy marker on the map
         if (deliveryBoyMarker) {
           deliveryBoyMarker.setLatLng([latitude, longitude]);
->>>>>>> 3c8d981d9c19ea90014b44fd293c1a8edf7b19a4
         } else {
           deliveryBoyMarker = new L.Marker([latitude, longitude]);
           deliveryBoyMarker.addTo(map);
