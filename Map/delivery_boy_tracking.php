@@ -2,14 +2,10 @@
 $id=0;
 $cout=0;
 if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
-  $host = 'localhost';        // Database host
-  $dbname = 'food_delivery';  // Database name
-  $username = 'root';         // Database username
-  $password = '';
-  $db = new mysqli($host, $username, $password, $dbname);
+  include 'config.php';
   $idt=$_POST['fel'];
   $sql = "SELECT * FROM orders WHERE order_id=$idt";
-  $result = mysqli_query($db, $sql);
+  $result = mysqli_query($conn, $sql);
   if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $id=$row["delivery_boy_id"];
@@ -25,7 +21,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Track Customer</title>
   <link href="style.css" rel="stylesheet">
-  <script src="https://apis.mapmyindia.com/advancedmaps/v1/<API KEY>/map_load?v=1.5"></script>
+  <script src="https://apis.mapmyindia.com/advancedmaps/v1/<API>/map_load?v=1.5"></script>
   <script>
     let map;
     let customerMarker;
@@ -103,7 +99,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  delivery_boy_id: 1, // Change to dynamic delivery boy ID
+                  delivery_boy_id: <?php echo $id; ?>, // Change to dynamic delivery boy ID
                   latitude: latitude,
                   longitude: longitude
                 })
