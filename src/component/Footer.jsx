@@ -7,13 +7,8 @@ const Footer = () => {
       <div className="container mx-auto px-6 pb-40 text-center">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Track Your Order</h2>
         <div className="flex justify-center items-center gap-4">
-          <input
-            type="text"
-            placeholder="Enter your order number"
-            className="w-1/3 border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
           <button className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
-            Track
+            Track Now
           </button>
         </div>
       </div>
