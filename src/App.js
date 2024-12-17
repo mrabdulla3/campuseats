@@ -11,6 +11,8 @@ import LoginSignup from "./pages/LoginSignup";
 import Menu from "./pages/Menu";
 import CustomerProfile from "./pages/CustomerProfile";
 import RestaurantDashboard from "./pages/RestaurantDashbaord";
+import RecipeGenerator from "./pages/RecipeGenerator";
+import DeliveryboyDashboard from "./pages/DeliveryboyDashboard";
 
 function App() {
   return (
@@ -24,6 +26,9 @@ function App() {
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/profile" element={<CustomerProfile />} />
+          <Route path="/recipe-generator" element={<RecipeGenerator/>} />
+          <Route path="/delivery-boy-dashboard" element={<DeliveryboyDashboard/>} />
+
          
         </Routes>
       </Router>
