@@ -162,7 +162,7 @@ const RecipeGenerator = () => {
                 transition={{ duration: 0.5 }}
               >
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Generated Recipe:
+                  Recipe:
                 </h2>
                 <motion.p
                   className="text-gray-700 whitespace-pre-wrap"
