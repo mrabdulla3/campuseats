@@ -25,9 +25,6 @@ const Footer = () => {
           >
             Track
           </a>
-          <button className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
-            Track Now
-          </button>
         </div>
       </div>
 
