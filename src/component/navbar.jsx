@@ -51,6 +51,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
         {/* Conditionally Render Links Based on Login Status */}
+            <Link to="/recipe-generator">Recipe Generator</Link>
         {isLoggedIn ? (
           <>
             <Link to="/menu" className="hover:text-purple-700">
