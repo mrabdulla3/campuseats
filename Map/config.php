@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-$host = 'localhost';        // Database host
-$dbname = 'food_delivery';  // Database name
-$username = 'root';         // Database username
-$password = '';             // Database password (leave blank if none)
+$host = 'sql12.freesqldatabase.com';        // Database host
+$dbname = 'sql12752618';  // Database name
+$username = 'sql12752618';         // Database username
+$password = '7hS1lbmBYp';             // Database password (leave blank if none)
 
 // Create a MySQLi connection
 $conn = mysqli_connect($host, $username, $password, $dbname);
