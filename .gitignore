@@ -24,6 +24,4 @@ yarn-error.log*
 
 .dist
 
-.env
-
 .gitignore

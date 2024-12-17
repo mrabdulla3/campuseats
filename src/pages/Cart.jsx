@@ -18,8 +18,8 @@ const Cart = () => {
                 className="w-20 h-20 object-cover"
               />
               <div>
-                <p className="font-semibold">Black Hoodie</p>
-                <p className="text-gray-500">Price: €70.00</p>
+                <p className="font-semibold">Pizza</p>
+                <p className="text-gray-500">Price: &#8377;200</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -29,7 +29,7 @@ const Cart = () => {
                 defaultValue="1"
                 className="w-16 border rounded text-center"
               />
-              <p className="font-semibold">€70.00</p>
+              <p className="font-semibold">&#8377;200</p>
             </div>
           </div>
 
@@ -42,8 +42,9 @@ const Cart = () => {
                 className="w-20 h-20 object-cover"
               />
               <div>
-                <p className="font-semibold">Sleeveless Shirt</p>
-                <p className="text-gray-500">Price: €135.00</p>
+                <p className="font-semibold">Paneer Sandwich</p>
+                <p className="text-gray-500">Price: &#8377;200</p>
+
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -53,7 +54,7 @@ const Cart = () => {
                 defaultValue="1"
                 className="w-16 border rounded text-center"
               />
-              <p className="font-semibold">€135.00</p>
+              <p className="font-semibold">&#8377;200</p>
             </div>
           </div>
         </div>
@@ -78,7 +79,7 @@ const Cart = () => {
         <div className="border p-6 space-y-4 rounded">
           <div className="flex justify-between">
             <p>Subtotal</p>
-            <p className="font-semibold">€315.00</p>
+            <p className="font-semibold">&#8377;400</p>
           </div>
 
           {/* Shipping Options */}
@@ -91,11 +92,11 @@ const Cart = () => {
               </label>
               <label className="flex items-center space-x-2">
                 <input type="radio" name="shipping" />
-                <span>Flat rate: €10.00</span>
+                <span>Flat rate: &#8377;10.00</span>
               </label>
               <label className="flex items-center space-x-2">
                 <input type="radio" name="shipping" />
-                <span>Pickup: €15.00</span>
+                <span>Pickup: &#8377;15.00</span>
               </label>
             </div>
             <button className="text-blue-600 underline mt-2">
@@ -105,7 +106,7 @@ const Cart = () => {
 
           <div className="flex justify-between border-t pt-4">
             <p>Total</p>
-            <p className="font-bold">€315.00</p>
+            <p className="font-bold">&#8377;425.00</p>
           </div>
 
           <button className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4">
