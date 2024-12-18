@@ -185,7 +185,7 @@ const RecipeGenerator = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
       >
-        Created with <span className="text-red-500">♥</span> by Namit
+        Created with <span className="text-red-500">♥</span> by CampusEats
       </motion.footer>
     </div>
   );
