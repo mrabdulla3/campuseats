@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [userType, setUserType] = useState(""); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); 
-    const storedUserType = localStorage.getItem("userType"); 
-    setUserType(storedUserType || ""); 
+    setIsLoggedIn(!!token);
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType || "");
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    localStorage.removeItem("userType"); 
+    localStorage.removeItem("token");
+    localStorage.removeItem("userType");
     setIsLoggedIn(false);
-    navigate("/login"); 
+    navigate("/login");
   };
 
   return (
@@ -51,7 +51,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
         {/* Conditionally Render Links Based on Login Status */}
-            <Link to="/recipe-generator">Recipe Generator</Link>
+        <Link to="/recipe-generator">Recipe Generator</Link>
         {isLoggedIn ? (
           <>
             <Link to="/menu" className="hover:text-purple-700">
@@ -62,9 +62,19 @@ const Navbar = () => {
             </Link>
             {/* Show Cart only if userType is NOT vendor */}
             {userType !== "vendor" && (
+              <>
               <Link to="/cart" className="hover:text-purple-700">
                 Cart
               </Link>
+              <a
+                href="https://www.example-tracking-website.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              >
+                Track Order
+              </a>
+            </>
             )}
             <button
               onClick={handleLogout}
