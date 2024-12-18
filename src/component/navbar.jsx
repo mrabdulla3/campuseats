@@ -28,6 +28,7 @@ const Navbar = () => {
       </Link>
 
       {/* Search Bar */}
+       {userType !== "vendor" &&(
       <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-lg">
         <input
           type="text"
@@ -47,16 +48,18 @@ const Navbar = () => {
           />
         </svg>
       </div>
-
+       )}
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
         {/* Conditionally Render Links Based on Login Status */}
             <Link to="/recipe-generator">Recipe Generator</Link>
         {isLoggedIn ? (
           <>
+          {userType !== "vendor" &&(
             <Link to="/menu" className="hover:text-purple-700">
               Menu
             </Link>
+          )}
             <Link to="/profile" className="hover:text-purple-700">
               Profile
             </Link>
