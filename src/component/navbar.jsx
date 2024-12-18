@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
+  const [userId, setUserId] = useState(""); // State to store the current user ID
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,11 +12,16 @@ const Navbar = () => {
     setIsLoggedIn(!!token);
     const storedUserType = localStorage.getItem("userType");
     setUserType(storedUserType || "");
+
+    // Retrieve user ID from local storage (if stored) or any other source
+    const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
+    setUserId(storedUserId || "");
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
+    localStorage.removeItem("userId"); // Clear the user ID as well
     setIsLoggedIn(false);
     navigate("/login");
   };
@@ -60,21 +66,21 @@ const Navbar = () => {
             <Link to="/profile" className="hover:text-purple-700">
               Profile
             </Link>
-            {/* Show Cart only if userType is NOT vendor */}
+            {/* Show Cart and Track Order buttons only if userType is NOT vendor */}
             {userType !== "vendor" && (
               <>
-              <Link to="/cart" className="hover:text-purple-700">
-                Cart
-              </Link>
-              <a
-                href="https://www.example-tracking-website.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-              >
-                Track Order
-              </a>
-            </>
+                <Link to="/cart" className="hover:text-purple-700">
+                  Cart
+                </Link>
+                <a
+                  href={`https://collegeseat.great-site.net/?type=1&id=${userId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                >
+                  Track Order
+                </a>
+              </>
             )}
             <button
               onClick={handleLogout}
