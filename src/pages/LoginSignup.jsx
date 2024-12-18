@@ -49,6 +49,7 @@ const LoginSignup = () => {
   
         setSuccess(response.data.message || "Registration successful!");
         localStorage.setItem("userType", formData.userType);
+        localStorage.setItem("id", response.data.id);//change by Tushar
   
         if (formData.userType === "vendor") {
           navigate("/dashboard");  
@@ -67,7 +68,7 @@ const LoginSignup = () => {
   
         const userType = response.data.userType; 
         localStorage.setItem("userType", userType);
-  
+        localStorage.setItem("id", response.data.id);//change by Tushar
         if (userType === "vendor") {
           navigate("/dashboard");
         } else {
