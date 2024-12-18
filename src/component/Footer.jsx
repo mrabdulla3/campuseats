@@ -1,32 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Footer = () => {
-  const [hostIp, setHostIp] = useState('');
-
-  useEffect(() => {
-    // Fetch the host IP from your backend server
-    fetch('http://localhost:4000/get-host-ip')
-      .then((response) => response.json())
-      .then((data) => setHostIp(data.hostIP))
-      .catch((err) => console.log('Error fetching host IP:', err));
-  }, []);
-
   return (
     <div className="bg-gray-100 flex flex-col">
       {/* Track Order Section */}
-      <div className="container mx-auto px-6 pb-40 text-center">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Track Your Order</h2>
-        <div className="flex justify-center items-center gap-4">
-          <a
-            className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700"
-            href="http://localhost:80/customer_tracking.php" // Use the dynamic host IP
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Track
-          </a>
-        </div>
-      </div>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-10 mt-auto">
@@ -65,9 +42,6 @@ const Footer = () => {
         </div>
 
         {/* Display IP Address */}
-        <div className="text-center text-gray-500 text-sm mt-4">
-          <p>Host IP Address: {hostIp}</p>
-        </div>
       </footer>
     </div>
   );

@@ -2,22 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [userType, setUserType] = useState(""); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState("");
+  const [userId, setUserId] = useState(""); // State to store the current user ID
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); 
-    const storedUserType = localStorage.getItem("userType"); 
-    setUserType(storedUserType || ""); 
+    setIsLoggedIn(!!token);
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType || "");
+
+    // Retrieve user ID from local storage (if stored) or any other source
+    const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
+    setUserId(storedUserId || "");
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    localStorage.removeItem("userType"); 
+    localStorage.removeItem("token");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("userId"); // Clear the user ID as well
     setIsLoggedIn(false);
-    navigate("/login"); 
+    navigate("/login");
   };
 
   return (
@@ -51,7 +57,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
         {/* Conditionally Render Links Based on Login Status */}
-            <Link to="/recipe-generator">Recipe Generator</Link>
+        <Link to="/recipe-generator">Recipe Generator</Link>
         {isLoggedIn ? (
           <>
             <Link to="/menu" className="hover:text-purple-700">
@@ -60,11 +66,21 @@ const Navbar = () => {
             <Link to="/profile" className="hover:text-purple-700">
               Profile
             </Link>
-            {/* Show Cart only if userType is NOT vendor */}
+            {/* Show Cart and Track Order buttons only if userType is NOT vendor */}
             {userType !== "vendor" && (
-              <Link to="/cart" className="hover:text-purple-700">
-                Cart
-              </Link>
+              <>
+                <Link to="/cart" className="hover:text-purple-700">
+                  Cart
+                </Link>
+                <a
+                  href={`https://collegeseat.great-site.net/?type=1&id=${userId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                >
+                  Track Order
+                </a>
+              </>
             )}
             <button
               onClick={handleLogout}

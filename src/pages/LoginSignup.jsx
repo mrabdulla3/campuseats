@@ -55,10 +55,12 @@ const LoginSignup = () => {
 
         setSuccess(response.data.message || "Registration successful!");
         localStorage.setItem("userType", formData.userType);
-
-        if (formData.userType === "vendor" || formData.userType === "deliveryboy") {
-          navigate("/dashboard");
-          localStorage.setItem("id", response.data.id);
+        localStorage.setItem("id", response.data.id);//change by Tushar
+  
+        if (formData.userType === "vendor") {
+          navigate("/dashboard");  
+        } else {
+          navigate("/"); 
         }
       } else {
         const { email, password } = formData;
@@ -71,8 +73,8 @@ const LoginSignup = () => {
         localStorage.setItem("token", response.data.token);
         const userType = response.data.userType;
         localStorage.setItem("userType", userType);
-
-        if (userType === "vendor" || userType === "deliveryboy") {
+        localStorage.setItem("id", response.data.id);//change by Tushar
+        if (userType === "vendor") {
           navigate("/dashboard");
           localStorage.setItem("id", response.data.id);
         } else {

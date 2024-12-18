@@ -15,7 +15,7 @@ $longitude = $data['longitude'];
 include 'config.php';
 
 // Prepare the SQL statement to update the delivery boy's location
-$sql = "UPDATE delivery_boy_locations SET latitude = ?, longitude = ? WHERE delivery_boy_id = ?";
+$sql = "UPDATE delivery_boy SET delivery_latitude = ?, delivery_longitude = ? WHERE id = ?";
 
 $stmt = mysqli_prepare($conn, $sql);
 
