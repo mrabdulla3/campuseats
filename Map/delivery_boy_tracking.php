@@ -1,15 +1,17 @@
 <?php
-$id=0;
-$cout=0;
-if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
+$caster_id = $_GET['id'] ?? null;
+$id = 0;
+$cout = 0;
+$de_boy_id=0;
+if (isset($_POST["sub"]) && $_POST["fel"] != null) {
   include 'config.php';
-  $idt=$_POST['fel'];
-  $sql = "SELECT * FROM orders WHERE order_id=$idt";
+  $idt = $_POST['fel'];
+  $sql = "SELECT * FROM orders WHERE user_id='$caster_id' AND id='$idt'";
   $result = mysqli_query($conn, $sql);
   if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $id=$row["delivery_boy_id"];
-    $cout=1;
+     $row = mysqli_fetch_array($result);
+     $id = $row["delivery_boy_id"];
+     $cout = 1;
   }
 }
 ?>
@@ -43,7 +45,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
 
     // Fetch both the delivery boy and customer locations
     function fetchDeliveryBoyAndCustomerLocation() {
-      fetch('/get_locations.php?delivery_boy_id=<?php echo $id; ?>') // Replace with your API endpoint
+      fetch('/get_locations.php?cas_id=<?php echo $$caster_id; ?>&ord_id=<?php echo $id;?>&deli_boy=<?php echo $de_boy_id;?>') // Replace with your API endpoint
         .then(response => response.json())
         .then(data => {
           if (data.status === 'success') {
@@ -129,6 +131,7 @@ if (isset($_POST["sub"]) && $_POST["fel"]!=null) {
 <body onload="initMap()">
   <h1>Track Customer</h1>
   <form method="POST">
+  <input type="hidden" name="id" value="<?php echo $caster_id?>">
     <input type="number" name="fel" placeholder="Enter the order ID:" required>
     <button type="submit" name="sub">Map</button>
   </form>
