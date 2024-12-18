@@ -1,156 +1,244 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function ProfilePage({ userType }) {
+function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
-  const [recentOrders, setRecentOrders] = useState([]);
-  const [orderDetails, setOrderDetails] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [password, setPassword] = useState(""); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const apiEndpoint =
-    userType === "user"
-      ? "http://localhost:4000/users/customer-profile"
-      : "http://localhost:4000/vendors/vendor-profile";
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(apiEndpoint);
-        setProfileData(response.data.profile); 
-        setRecentOrders(response.data.recentOrders || []); 
-        setOrderDetails(response.data.orderDetails || null); 
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const response = await axios.get(
+          "http://localhost:4000/users/profile",
+          {
+            headers: { Authorization: token },
+          }
+        );
+        console.log("Fetched profile data:", response.data); 
+        setProfileData(response.data);
+        setFormData(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching profile data:", err.message);
+        setError("Failed to load profile data. Please try again.");
+        setLoading(false);
       }
     };
 
-    fetchData();
-  }, [apiEndpoint]);
+    if (token) fetchData();
+    else {
+      setError("No token found. Please log in.");
+      setLoading(false);
+    }
+  }, [token]);
 
-  if (!profileData) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSave = async () => {
+    if (!password) {
+      alert("Please enter your password to confirm changes.");
+      return;
+    }
+  
+    try {
+      await axios.put(
+        "http://localhost:4000/users/profile-update",
+        { ...formData, id: profileData.id, currentPassword: password }, 
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setProfileData(formData);
+      setIsEditing(false);
+      setPassword(""); 
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Error saving profile data:", err.message);
+      alert("Failed to update profile. Please check your password and try again.");
+    }
+  };
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-blue-50">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-yellow-50">
         <p>Loading...</p>
       </div>
     );
   }
 
-  return (
-    <div className="relative min-h-screen flex items-center justify-center bg-blue-50 overflow-hidden">
-      {/* Background Shapes */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-blue-500 rounded-tl-full"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500 rounded-br-full"></div>
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-yellow-50">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
-      {/* Main Container */}
-      <div className="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-10 z-10">
-        {/* Profile Page */}
-        <div className="bg-white shadow-lg rounded-2xl w-80 p-6">
-          {/* Profile Section */}
-          <div className="flex flex-col items-center">
-            <img
-              src={profileData.image || "https://via.placeholder.com/100"}
-              alt={profileData.name || "User"}
-              className="w-24 h-24 rounded-full mb-4"
+  return (
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <aside className="w-1/4 bg-white shadow-lg flex flex-col items-center py-8">
+        <div className="relative">
+          {/* Profile Image */}
+          <img
+            src={
+              selectedImage ||
+              profileData.image ||
+              "https://via.placeholder.com/100"
+            }
+            alt={profileData.name || "User"}
+            className="w-24 h-24 rounded-full mb-4"
+          />
+          {/* File Input for Image Selection */}
+          <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full cursor-pointer hover:bg-blue-400">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
             />
-            <h2 className="text-2xl font-bold text-gray-900">{profileData.name || "N/A"}</h2>
-            <p className="text-gray-600">{profileData.email || "Email not available"}</p>
+            {/* Camera Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6.75 7.5l1.5-2.5h7.5l1.5 2.5m-9 0h6m-6 0v1m0-1v-1m6 1v1m0-1v-1"
+              />
+            </svg>
+          </label>
+        </div>
+        <h2 className="text-xl font-bold text-gray-800 mb-1">
+          {profileData.name || "N/A"}
+        </h2>
+        <p className="text-gray-500 mb-6">{profileData.email || "N/A"}</p>
+        <button className="w-3/4 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg shadow-md">
+          Orders
+        </button>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 bg-gradient-to-br from-blue-100 to-yellow-50 p-8">
+        <div className="bg-white shadow-xl rounded-2xl p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Profile Details
+            </h2>
+            {isEditing ? (
+              <button
+                className="bg-green-500 hover:bg-green-400 text-white py-2 px-4 rounded-lg shadow-md"
+                onClick={handleSave}
+              >
+                Save Changes
+              </button>
+            ) : (
+              <button
+                className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </button>
+            )}
           </div>
 
-          {/* Recent Orders */}
-          {userType === "customer" && (
-            <div className="mt-6">
-              <div className="flex justify-between mb-3">
-                <span className="text-gray-600 font-medium">Recent Orders</span>
-              </div>
-              <div className="space-y-2">
-                {recentOrders.map((order, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between bg-blue-100 rounded-lg p-2"
-                  >
-                    <span className="text-blue-600 font-medium">{order.item}</span>
-                    <span className="text-gray-700">${order.price}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Profile Form */}
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-600 text-sm mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name || ""}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className={`w-full border rounded-md px-3 py-2 text-gray-800 focus:outline-none ${
+                  !isEditing ? "bg-gray-100" : ""
+                }`}
+              />
             </div>
-          )}
-
-          {/* Navigation */}
-          <div className="mt-6 space-y-3">
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <span className="text-2xl">💳</span>
-              <span className="text-gray-700 font-medium">Payment</span>
+            <div>
+              <label className="block text-gray-600 text-sm mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email || ""}
+                disabled
+                className="w-full border rounded-md px-3 py-2 text-gray-800 bg-gray-100"
+              />
             </div>
-            {userType === "customer" && (
-              <div className="flex items-center space-x-3 cursor-pointer">
-                <span className="text-2xl">📦</span>
-                <span className="text-gray-700 font-medium">Subscription</span>
+            <div>
+              <label className="block text-gray-600 text-sm mb-1">Phone</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone || ""}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className={`w-full border rounded-md px-3 py-2 text-gray-800 focus:outline-none ${
+                  !isEditing ? "bg-gray-100" : ""
+                }`}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 text-sm mb-1">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address || ""}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className={`w-full border rounded-md px-3 py-2 text-gray-800 focus:outline-none ${
+                  !isEditing ? "bg-gray-100" : ""
+                }`}
+              />
+            </div>
+            {isEditing && (
+              <div>
+                <label className="block text-gray-600 text-sm mb-1">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border rounded-md px-3 py-2 text-gray-800"
+                  placeholder="Enter your password"
+                />
               </div>
             )}
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <span className="text-2xl">❓</span>
-              <span className="text-gray-700 font-medium">FAQs</span>
-            </div>
           </div>
         </div>
-
-        {/* Order Details Page */}
-        {userType === "customer" && orderDetails && (
-          <div className="bg-white shadow-lg rounded-2xl w-80 p-6">
-            {/* Header */}
-            <h3 className="text-gray-800 mb-4">
-              Recent order at{" "}
-              <span className="text-blue-500 font-semibold cursor-pointer">
-                {orderDetails.restaurantName}
-              </span>
-            </h3>
-            <img
-              src={orderDetails.image || "https://via.placeholder.com/300x150"}
-              alt="Order"
-              className="w-full rounded-lg mb-4"
-            />
-
-            {/* Order Item */}
-            <div className="flex justify-between items-center mb-4">
-              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm">
-                {orderDetails.quantity}
-              </span>
-              <span className="text-gray-800 font-medium">{orderDetails.item}</span>
-              <span className="text-gray-700">${orderDetails.price}</span>
-            </div>
-
-            {/* Price Breakdown */}
-            <div className="border-t pt-2 space-y-1">
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Subtotal</span>
-                <span>${orderDetails.subtotal}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Tax</span>
-                <span>${orderDetails.tax}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Delivery Fee</span>
-                <span>${orderDetails.deliveryFee}</span>
-              </div>
-              <div className="flex justify-between font-semibold mt-2">
-                <span>Total</span>
-                <span className="text-blue-500">${orderDetails.total}</span>
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="mt-6 space-y-2">
-              <button className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold">
-                Order Again
-              </button>
-              <button className="w-full border-2 border-blue-500 text-blue-500 py-2 rounded-lg font-semibold">
-                Contact Help
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+      </main>
     </div>
   );
 }
