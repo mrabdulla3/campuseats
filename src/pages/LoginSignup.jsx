@@ -45,15 +45,7 @@ const LoginSignup = () => {
 
     try {
       if (isSignup) {
-        const endpoint =
-          formData.userType === "vendor"
-            ? "http://localhost:4000/vendors/signup-vendor"
-            : formData.userType === "deliveryboy"
-            ? "http://localhost:4000/users/signup-deliveryboy"
-            : formData.userType === "college"
-            ? "http://localhost:4000/users/signup-college"
-            : "http://localhost:4000/users/signup-customer";
-
+        const endpoint = getEndpoint(formData.userType);
         const response = await axios.post(endpoint, {
           name: formData.name,
           email: formData.email,
@@ -66,8 +58,7 @@ const LoginSignup = () => {
 
         if (formData.userType === "vendor" || formData.userType === "deliveryboy") {
           navigate("/dashboard");
-        } else {
-          navigate("/");
+          localStorage.setItem("id", response.data.id);
         }
       } else {
         const { email, password } = formData;
@@ -83,6 +74,7 @@ const LoginSignup = () => {
 
         if (userType === "vendor" || userType === "deliveryboy") {
           navigate("/dashboard");
+          localStorage.setItem("id", response.data.id);
         } else {
           navigate("/");
         }
@@ -91,6 +83,20 @@ const LoginSignup = () => {
       setError(error.response?.data?.message || "An error occurred");
     }
   };
+
+  const getEndpoint = (userType) => {
+    switch (userType) {
+      case "vendor":
+        return "http://localhost:4000/vendors/signup-vendor";
+      case "deliveryboy":
+        return "http://localhost:4000/users/signup-deliveryboy";
+      case "college":
+        return "http://localhost:4000/users/signup-college";
+      default:
+        return "http://localhost:4000/users/signup-customer";
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 bg-check-pattern">
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-xl overflow-hidden flex transform transition duration-300 hover:scale-105">
