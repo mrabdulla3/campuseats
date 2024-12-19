@@ -5,6 +5,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
   const [userId, setUserId] = useState(""); // State to store the current user ID
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Modal state
   const navigate = useNavigate();
   const location = useLocation(); // Use location to detect route changes
 
@@ -14,7 +15,6 @@ const Navbar = () => {
     const storedUserType = localStorage.getItem("userType");
     setUserType(storedUserType || "");
 
-    // Retrieve user ID from local storage (if stored) or any other source
     const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
     setUserId(storedUserId || "");
   }, [location]); // Dependency on location, so it runs when the route changes
@@ -24,7 +24,17 @@ const Navbar = () => {
     localStorage.removeItem("userType");
     localStorage.removeItem("id"); // Clear the user ID as well
     setIsLoggedIn(false);
+    setIsLogoutModalOpen(false); // Close the modal
     navigate("/login");
+    window.location.reload(); // Reload the page to reflect logout state
+  };
+
+  const closeModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const openModal = () => {
+    setIsLogoutModalOpen(true);
   };
 
   return (
@@ -89,7 +99,7 @@ const Navbar = () => {
               </>
             )}
             <button
-              onClick={handleLogout}
+              onClick={openModal}
               className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
             >
               Logout
@@ -100,10 +110,35 @@ const Navbar = () => {
             to="/login"
             className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition"
           >
-            Login
+            Login   
           </Link>
         )}
       </div>
+
+      {/* Logout Modal */}
+      <Modal
+        isOpen={isLogoutModalOpen}
+        onRequestClose={closeModal}
+        className="bg-white w-96 p-8 rounded-lg shadow-lg mx-auto mt-20"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center"
+      >
+        <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+        <p className="text-gray-600 mb-6">Are you sure you want to log out?</p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+          >
+            Logout
+          </button>
+        </div>
+      </Modal>
     </nav>
   );
 };
