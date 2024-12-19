@@ -1,6 +1,80 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from 'framer-motion';
+
 
 const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [isCouponModalOpen, setCouponModalOpen] = useState(false);
+  const [isShippingModalOpen, setShippingModalOpen] = useState(false);
+  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
+
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
+  };
+
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/order_items/");
+        const data = await response.json();
+        setCartItems(data);
+
+        const total = data.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        setSubtotal(total);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  const handleQuantityChange = (id, newQuantity) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
+
+    setSubtotal(
+      cartItems.reduce(
+        (sum, item) =>
+          item.id === id
+            ? sum + item.price * newQuantity
+            : sum + item.price * item.quantity,
+        0
+      )
+    );
+  };
+  const handleRemoveItem = async (id) => {
+    try {
+      await fetch(`http://localhost:4000/order_items/remove-item/${id}`, {
+        method: "DELETE",
+      });
+
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.filter((item) => item.id !== id);
+        const total = updatedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        setSubtotal(total);
+
+        return updatedItems;
+      });
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row justify-between p-6">
       {/* Shopping Cart Section */}
@@ -9,42 +83,40 @@ const Cart = () => {
 
         {/* Dynamically Render Cart Items */}
         <div className="space-y-6">
-          {/* Item 1 */}
-          <div className="flex items-center justify-between border-b pb-4">
-            <div className="flex items-center space-x-4">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Black Hoodie"
-                className="w-20 h-20 object-cover"
-              />
-              <div>
-                <p className="font-semibold">Pizza</p>
-                <p className="text-gray-500">Price: &#8377;200</p>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between border-b pb-4"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={item.image || "https://via.placeholder.com/100"}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover"
+                />
+                <div>
+                  <p className="font-semibold">{item.item_name}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <input
-                type="number"
-                min="1"
-                defaultValue="1"
-                className="w-16 border rounded text-center"
-              />
-              <p className="font-semibold">&#8377;200</p>
-            </div>
-          </div>
-
-          {/* Item 2 */}
-          <div className="flex items-center justify-between border-b pb-4">
-            <div className="flex items-center space-x-4">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Sleeveless Shirt"
-                className="w-20 h-20 object-cover"
-              />
-              <div>
-                <p className="font-semibold">Paneer Sandwich</p>
-                <p className="text-gray-500">Price: &#8377;200</p>
-
+              <div className="flex items-center space-x-4">
+                <input
+                  type="number"
+                  min="1"
+                  value={item.quantity}
+                  onChange={(e) =>
+                    handleQuantityChange(item.id, +e.target.value)
+                  }
+                  className="w-16 border rounded text-center"
+                />
+                <p className="font-semibold">
+                  &#8377;{(item.price * item.quantity).toFixed(2)}
+                </p>
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           ))}
@@ -58,7 +130,7 @@ const Cart = () => {
             className="flex-1 border p-2 rounded"
           />
           <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
-            Apply coupon
+            Apply Coupon
           </button>
         </div>
       </div>
@@ -90,19 +162,17 @@ const Cart = () => {
                 <span>Pickup: &#8377;15.00</span>
               </label>
             </div>
-            <button className="text-blue-600 underline mt-2">
-              Calculate shipping
-            </button>
           </div>
 
           <div className="flex justify-between border-t pt-4">
             <p>Total</p>
             <p className="font-bold">&#8377;{(subtotal + 10).toFixed(2)}</p>
           </div>
-
-          <button className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4">
-            Proceed to checkout
-          </button>
+          <Link to="/confirm-order">
+            <button className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4">
+              Proceed to Checkout
+            </button>
+          </Link>
         </div>
       </div>
 

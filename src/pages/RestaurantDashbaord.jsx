@@ -103,7 +103,7 @@ const RestaurantDashboard = () => {
       });
 
       if (response.ok) {
-        alert("Form submitted successfully");
+        alert("Dish Added successfully");
         toggleAddDishModal();
         setVendorId("");
         setName("");
@@ -189,6 +189,7 @@ const RestaurantDashboard = () => {
       <aside className="w-1/5 bg-black-100 text-black flex flex-col">
         <div className="p-4 border-b border-gray-700">
           <h1 className="text-2xl font-bold">{profileData.name || 'N/A'}</h1>
+          <p className="text-sm text-gray-400">{profileData.address}</p>
           <p className="text-sm text-gray-400">Restaurant Id: {profileData.id}</p>
         </div>
         <nav className="flex-grow p-4 space-y-4">

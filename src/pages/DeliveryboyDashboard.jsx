@@ -70,8 +70,6 @@ const DeliveryboyDashboard = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   // Show Modal Message
   const showModalMessage = (message) => {
     setModalMessage(message);
@@ -80,7 +78,6 @@ const DeliveryboyDashboard = () => {
   };
 
   // Update Order Status
->>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const updateOrderStatus = (id, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -89,8 +86,6 @@ const DeliveryboyDashboard = () => {
     );
   };
 
-<<<<<<< HEAD
-=======
   // Take for Delivery
   const takeForDelivery = (order) => {
     updateOrderStatus(order.id, "Out for Delivery");
@@ -98,7 +93,6 @@ const DeliveryboyDashboard = () => {
   };
 
   // Format Date and Time
->>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return new Intl.DateTimeFormat("en-IN", {

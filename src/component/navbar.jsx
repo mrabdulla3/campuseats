@@ -5,29 +5,28 @@ import Modal from "react-modal";
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
-  const [userId, setUserId] = useState(""); // State to store the current user ID
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Modal state
+  const [userId, setUserId] = useState("");
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // Use location to detect route changes
-
+  const location = useLocation();
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
     const storedUserType = localStorage.getItem("userType");
     setUserType(storedUserType || "");
 
-    const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
+    const storedUserId = localStorage.getItem("id");
     setUserId(storedUserId || "");
-  }, [location]); // Dependency on location, so it runs when the route changes
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
-    localStorage.removeItem("id"); // Clear the user ID as well
+    localStorage.removeItem("id");
     setIsLoggedIn(false);
-    setIsLogoutModalOpen(false); // Close the modal
+    setIsLogoutModalOpen(false);
     navigate("/login");
-    window.location.reload(); // Reload the page to reflect logout state
+    window.location.reload();
   };
 
   const closeModal = () => {
@@ -41,9 +40,8 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
       {/* Logo */}
-      <Link to="/">
-        <div className="text-2xl font-bold text-purple-700">CampusEats</div>
-      </Link>
+
+      <div className="text-2xl font-bold text-purple-700">CampusEats</div>
 
       {/* Search Bar */}
       {userType !== "vendor" && (

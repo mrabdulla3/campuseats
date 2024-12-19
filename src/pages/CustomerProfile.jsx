@@ -14,6 +14,8 @@ function ProfilePage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [userType, setUserType] = useState("");
+  
 
   const token = localStorage.getItem("token");
 
@@ -28,6 +30,7 @@ function ProfilePage() {
         );
         setProfileData(response.data);
         setFormData(response.data);
+        setUserType(response.data.userType);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching profile data:", err.message);
@@ -57,7 +60,7 @@ function ProfilePage() {
     try {
       await axios.put(
         "http://localhost:4000/users/profile-update",
-        { ...formData, id: profileData.id, currentPassword: password }, 
+        { ...formData, id: profileData.id,userType, currentPassword: password }, 
         {
           headers: { Authorization: token },
         }
@@ -170,9 +173,11 @@ function ProfilePage() {
           {profileData.name || "N/A"}
         </h2>
         <p className="text-gray-500 mb-6">{profileData.email || "N/A"}</p>
+        {userType !== "vendor" && (
         <button className="w-3/4 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg shadow-md">
           Orders
         </button>
+        )}
       </aside>
 
       {/* Main Content */}
