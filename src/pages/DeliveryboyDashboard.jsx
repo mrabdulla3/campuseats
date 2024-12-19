@@ -40,12 +40,10 @@ const DeliveryboyDashboard = () => {
     JSON.parse(localStorage.getItem("openToWork")) ?? true
   );
 
-  // Persist Open to Work status
   useEffect(() => {
     localStorage.setItem("openToWork", JSON.stringify(openToWork));
   }, [openToWork]);
 
-  // Open OTP Dialog
   const openOtpDialog = (order, action) => {
     setSelectedOrder(order);
     setShowOtpDialog(true);
@@ -53,14 +51,12 @@ const DeliveryboyDashboard = () => {
     setOtpInput("");
   };
 
-  // Close OTP Dialog
   const closeOtpDialog = () => {
     setShowOtpDialog(false);
     setSelectedOrder(null);
     setActionType("");
   };
 
-  // Handle OTP Verification
   const handleOtpVerification = () => {
     if (selectedOrder) {
       if (otpInput === selectedOrder.otp) {
@@ -74,6 +70,8 @@ const DeliveryboyDashboard = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
   // Show Modal Message
   const showModalMessage = (message) => {
     setModalMessage(message);
@@ -82,6 +80,7 @@ const DeliveryboyDashboard = () => {
   };
 
   // Update Order Status
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const updateOrderStatus = (id, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -90,6 +89,8 @@ const DeliveryboyDashboard = () => {
     );
   };
 
+<<<<<<< HEAD
+=======
   // Take for Delivery
   const takeForDelivery = (order) => {
     updateOrderStatus(order.id, "Out for Delivery");
@@ -97,6 +98,7 @@ const DeliveryboyDashboard = () => {
   };
 
   // Format Date and Time
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return new Intl.DateTimeFormat("en-IN", {
@@ -105,12 +107,10 @@ const DeliveryboyDashboard = () => {
     }).format(date);
   };
 
-  // Filter Orders
   const filteredOrders = orders.filter((order) =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Summary Metrics
   const totalOrders = orders.length;
   const totalAmount = orders.reduce((sum, order) => sum + parseFloat(order.total), 0);
   const penaltyAmount = orders.filter((order) => order.status === "Cancelled").length * 5;

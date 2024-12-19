@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+<<<<<<< HEAD
+=======
 import Modal from "react-modal";
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
 import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
@@ -17,6 +20,10 @@ const LoginSignup = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+  const navigate = useNavigate();
+=======
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -48,7 +55,15 @@ const LoginSignup = () => {
 
     try {
       if (isSignup) {
+<<<<<<< HEAD
+        const endpoint =
+          formData.userType === "vendor"
+            ? "http://localhost:4000/vendors/signup-vendor"
+            : "http://localhost:4000/users/signup-customer";
+
+=======
         const endpoint = getEndpoint(formData.userType);
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
         const response = await axios.post(endpoint, {
           name: formData.name,
           email: formData.email,
@@ -60,9 +75,18 @@ const LoginSignup = () => {
         setModalMessage("Registration successful! Please log in to continue.");
         openModal();
         localStorage.setItem("userType", formData.userType);
+<<<<<<< HEAD
+
+        if (formData.userType === "vendor") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+=======
         localStorage.setItem("id", response.data.id);
 
         navigate("/login");
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
       } else {
         const { email, password } = formData;
         const response = await axios.post("http://localhost:4000/users/login", {
@@ -74,9 +98,15 @@ const LoginSignup = () => {
         setModalMessage("Login successful!");
         openModal();
         localStorage.setItem("token", response.data.token);
+<<<<<<< HEAD
+
+        const userType = response.data.userType;
+        localStorage.setItem("userType", userType);
+=======
         const userType = response.data.userType;
         localStorage.setItem("userType", userType);
         localStorage.setItem("id", response.data.id);
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
 
         if (userType === "vendor") {
           navigate("/dashboard");
@@ -90,6 +120,8 @@ const LoginSignup = () => {
       setError(error.response?.data?.message || "An error occurred");
     }
   };
+<<<<<<< HEAD
+=======
 
   const getEndpoint = (userType) => {
     switch (userType) {
@@ -112,6 +144,7 @@ const LoginSignup = () => {
     setIsModalOpen(false);
   };
 
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 bg-check-pattern">
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-xl overflow-hidden flex transform transition duration-300 hover:scale-105">
@@ -134,6 +167,131 @@ const LoginSignup = () => {
         </div>
 
         {/* Right Panel */}
+<<<<<<< HEAD
+        <div className="w-1/2 p-8">
+          {isSignup ? (
+            <>
+              <h2 className="text-2xl font-bold text-purple-600 mb-6">
+                Sign Up
+              </h2>
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="userType"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    User Type
+                  </label>
+                  <select
+                    id="userType"
+                    value={formData.userType}
+                    onChange={handleUserTypeChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="user">Customer</option>
+                    <option value="vendor">Vendor</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
+                >
+                  SIGN UP
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-purple-600 mb-6">
+                Sign In
+              </h2>
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
+                >
+                  SIGN IN
+                </button>
+              </form>
+            </>
+          )}
+=======
         <div className="w-1/2 p-10">
           <h2 className="text-3xl font-bold text-purple-700 mb-6">
             {isSignup ? "Create an Account" : "Welcome Back"}
@@ -206,6 +364,7 @@ const LoginSignup = () => {
               {isSignup ? "REGISTER" : "SIGN IN"}
             </button>
           </form>
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
           {error && <p className="text-red-500 mt-4">{error}</p>}
           {success && <p className="text-green-500 mt-4">{success}</p>}
         </div>

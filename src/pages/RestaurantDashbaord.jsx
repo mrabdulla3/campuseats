@@ -235,7 +235,7 @@ const RestaurantDashboard = () => {
             />
           </div>
           <div className="flex items-center space-x-4">
-            <label htmlFor="">Total Earnings : $0</label>
+            <label htmlFor="">Total Earnings : Rs 0</label>
             <button className="text-gray-600" onClick={toggleNotificationModal}>
               <FaBell />
             </button>
@@ -466,7 +466,7 @@ const RestaurantDashboard = () => {
                         {item.description}
                       </td>
                       <td className="p-3 border border-gray-300">
-                        ${item.price}
+                        Rs {item.price}
                       </td>
                       <td className="p-3 border border-gray-300">
                         {item.category}

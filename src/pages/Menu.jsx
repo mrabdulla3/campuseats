@@ -9,8 +9,12 @@ import img5 from "../assets/5.jpg";
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [userType, setUserType] = useState("");
+<<<<<<< HEAD
+  const [cart, setCart] = useState([]);
+=======
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
 
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
@@ -54,6 +58,46 @@ const Menu = () => {
   };
 
   const handleDelete = async (itemId) => {
+<<<<<<< HEAD
+    console.log(`Delete item with ID: ${itemId}`);
+    try {
+      await fetch(`http://localhost:4000/menu/${itemId}`, { method: "DELETE" });
+      setMenuItems((prevItems) =>
+        prevItems.filter((item) => item.id !== itemId)
+      );
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  const handleAddToCart = async (menu_id) => {
+    const order_id = Date.now(); 
+    const quantity = 1; 
+
+    const selectedItem = menuItems.find((item) => item.id === menu_id);
+    if (!selectedItem) return;
+
+    const price = selectedItem.price;
+
+    const cartItem = { order_id, menu_id, quantity, price };
+
+    try {
+      const response = await fetch("http://localhost:4000/order_items/add-to-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cartItem),
+      });
+
+      if (response.ok) {
+        alert("Item added to cart successfully!");
+        setCart((prevCart) => [...prevCart, cartItem]); // Update local cart
+      } else {
+        console.error("Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+=======
     openModal({
       title: "Delete Item",
       body: `Are you sure you want to delete the item with ID: ${itemId}?`,
@@ -74,6 +118,7 @@ const Menu = () => {
       title: "Added to Cart",
       body: `Item with ID: ${itemId} has been added to your cart!`,
     });
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   };
 
   return (
@@ -113,6 +158,15 @@ const Menu = () => {
                     </span>
                   ))}
                 </div>
+<<<<<<< HEAD
+
+                <button
+                  onClick={() => handleAddToCart(item.id)}
+                  className="w-full mt-4 bg-purple-500 text-white text-sm py-2 px-3 rounded-md hover:bg-purple-600"
+                >
+                  Add to Cart
+                </button>
+=======
                 {userType === "vendor" ? (
                   <div className="flex justify-between mt-4">
                     <button
@@ -136,6 +190,7 @@ const Menu = () => {
                     Add to Cart
                   </button>
                 )}
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
               </div>
             </div>
           ))}

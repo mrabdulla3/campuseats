@@ -1,24 +1,13 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 
 const Cart = () => {
-  const [isCouponModalOpen, setCouponModalOpen] = useState(false);
-  const [isShippingModalOpen, setShippingModalOpen] = useState(false);
-  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
-  };
-
   return (
     <div className="flex flex-col md:flex-row justify-between p-6">
       {/* Shopping Cart Section */}
       <div className="w-full md:w-2/3">
-        <h2 className="text-2xl font-bold mb-6">Shopping cart</h2>
+        <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
 
-        {/* Cart Items */}
+        {/* Dynamically Render Cart Items */}
         <div className="space-y-6">
           {/* Item 1 */}
           <div className="flex items-center justify-between border-b pb-4">
@@ -55,18 +44,10 @@ const Cart = () => {
               <div>
                 <p className="font-semibold">Paneer Sandwich</p>
                 <p className="text-gray-500">Price: &#8377;200</p>
+
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <input
-                type="number"
-                min="1"
-                defaultValue="1"
-                className="w-16 border rounded text-center"
-              />
-              <p className="font-semibold">&#8377;200</p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Coupon Section */}
@@ -76,10 +57,7 @@ const Cart = () => {
             placeholder="Coupon code"
             className="flex-1 border p-2 rounded"
           />
-          <button
-            onClick={() => setCouponModalOpen(true)}
-            className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900"
-          >
+          <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
             Apply coupon
           </button>
         </div>
@@ -87,12 +65,12 @@ const Cart = () => {
 
       {/* Cart Totals Section */}
       <div className="w-full md:w-1/3 mt-8 md:mt-0 md:ml-6">
-        <h2 className="text-2xl font-bold mb-6">Cart totals</h2>
+        <h2 className="text-2xl font-bold mb-6">Cart Totals</h2>
 
         <div className="border p-6 space-y-4 rounded">
           <div className="flex justify-between">
             <p>Subtotal</p>
-            <p className="font-semibold">&#8377;400</p>
+            <p className="font-semibold">&#8377;{subtotal.toFixed(2)}</p>
           </div>
 
           {/* Shipping Options */}
@@ -112,23 +90,17 @@ const Cart = () => {
                 <span>Pickup: &#8377;15.00</span>
               </label>
             </div>
-            <button
-              onClick={() => setShippingModalOpen(true)}
-              className="text-blue-600 underline mt-2"
-            >
+            <button className="text-blue-600 underline mt-2">
               Calculate shipping
             </button>
           </div>
 
           <div className="flex justify-between border-t pt-4">
             <p>Total</p>
-            <p className="font-bold">&#8377;425.00</p>
+            <p className="font-bold">&#8377;{(subtotal + 10).toFixed(2)}</p>
           </div>
 
-          <button
-            onClick={() => setCheckoutModalOpen(true)}
-            className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4"
-          >
+          <button className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4">
             Proceed to checkout
           </button>
         </div>
