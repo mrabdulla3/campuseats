@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Modal from "react-modal"; // Modal package
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,6 +7,7 @@ const Navbar = () => {
   const [userId, setUserId] = useState(""); // State to store the current user ID
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Modal state
   const navigate = useNavigate();
+  const location = useLocation(); // Use location to detect route changes
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,12 +17,12 @@ const Navbar = () => {
 
     const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
     setUserId(storedUserId || "");
-  }, []);
+  }, [location]); // Dependency on location, so it runs when the route changes
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
-    localStorage.removeItem("userId"); // Clear the user ID as well
+    localStorage.removeItem("id"); // Clear the user ID as well
     setIsLoggedIn(false);
     setIsLogoutModalOpen(false); // Close the modal
     navigate("/login");
@@ -66,6 +66,7 @@ const Navbar = () => {
           </svg>
         </div>
       )}
+
       {/* Navigation Links */}
       <div className="hidden md:flex items-center space-x-6 text-gray-600">
         {/* Conditionally Render Links Based on Login Status */}
@@ -86,8 +87,9 @@ const Navbar = () => {
                 <Link to="/cart" className="hover:text-purple-700">
                   Cart
                 </Link>
+                {/* Track Order Button based on UserType */}
                 <a
-                  href={`https://collegeseat.great-site.net/?type=1&id=${userId}`}
+                  href={`https://collegeseat.great-site.net/?type=${userType === "delivery_boy" ? 2 : 1}&id=${userId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
