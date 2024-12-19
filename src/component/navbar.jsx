@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import Modal from "react-modal";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -89,7 +90,9 @@ const Navbar = () => {
                 </Link>
                 {/* Track Order Button based on UserType */}
                 <a
-                  href={`https://collegeseat.great-site.net/?type=${userType === "delivery_boy" ? 2 : 1}&id=${userId}`}
+                  href={`https://collegeseat.great-site.net/?type=${
+                    userType === "delivery_boy" ? 2 : 1
+                  }&id=${userId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
@@ -110,7 +113,7 @@ const Navbar = () => {
             to="/login"
             className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition"
           >
-            Login   
+            Login
           </Link>
         )}
       </div>
