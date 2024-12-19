@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Cart = () => {
+  const [isCouponModalOpen, setCouponModalOpen] = useState(false);
+  const [isShippingModalOpen, setShippingModalOpen] = useState(false);
+  const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
+
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
+  };
+
   return (
     <div className="flex flex-col md:flex-row justify-between p-6">
       {/* Shopping Cart Section */}
@@ -44,7 +55,6 @@ const Cart = () => {
               <div>
                 <p className="font-semibold">Paneer Sandwich</p>
                 <p className="text-gray-500">Price: &#8377;200</p>
-
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -66,7 +76,10 @@ const Cart = () => {
             placeholder="Coupon code"
             className="flex-1 border p-2 rounded"
           />
-          <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
+          <button
+            onClick={() => setCouponModalOpen(true)}
+            className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900"
+          >
             Apply coupon
           </button>
         </div>
@@ -99,7 +112,10 @@ const Cart = () => {
                 <span>Pickup: &#8377;15.00</span>
               </label>
             </div>
-            <button className="text-blue-600 underline mt-2">
+            <button
+              onClick={() => setShippingModalOpen(true)}
+              className="text-blue-600 underline mt-2"
+            >
               Calculate shipping
             </button>
           </div>
@@ -109,11 +125,80 @@ const Cart = () => {
             <p className="font-bold">&#8377;425.00</p>
           </div>
 
-          <button className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4">
+          <button
+            onClick={() => setCheckoutModalOpen(true)}
+            className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 mt-4"
+          >
             Proceed to checkout
           </button>
         </div>
       </div>
+
+      {/* Modals */}
+      <AnimatePresence>
+        {isCouponModalOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h3 className="text-xl font-bold mb-4">Coupon Applied!</h3>
+              <p>Your coupon has been successfully applied.</p>
+              <button
+                onClick={() => setCouponModalOpen(false)}
+                className="mt-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900"
+              >
+                Close
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {isShippingModalOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h3 className="text-xl font-bold mb-4">Shipping Calculated</h3>
+              <p>Your shipping costs have been updated.</p>
+              <button
+                onClick={() => setShippingModalOpen(false)}
+                className="mt-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900"
+              >
+                Close
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {isCheckoutModalOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h3 className="text-xl font-bold mb-4">Ready to Checkout</h3>
+              <p>Proceeding to checkout...</p>
+              <button
+                onClick={() => setCheckoutModalOpen(false)}
+                className="mt-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900"
+              >
+                Close
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
