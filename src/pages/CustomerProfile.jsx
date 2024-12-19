@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
@@ -9,6 +12,8 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -45,7 +50,7 @@ function ProfilePage() {
 
   const handleSave = async () => {
     if (!password) {
-      alert("Please enter your password to confirm changes.");
+      openModal("Please enter your password to confirm changes.");
       return;
     }
   
@@ -60,10 +65,10 @@ function ProfilePage() {
       setProfileData(formData);
       setIsEditing(false);
       setPassword(""); 
-      alert("Profile updated successfully!");
+      openModal("Profile updated successfully!");
     } catch (err) {
       console.error("Error saving profile data:", err.message);
-      alert("Failed to update profile. Please check your password and try again.");
+      openModal("Failed to update profile. Please check your password and try again.");
     }
   };
   
@@ -72,6 +77,15 @@ function ProfilePage() {
     if (file) {
       setSelectedImage(URL.createObjectURL(file));
     }
+  };
+
+  const openModal = (message) => {
+    setModalMessage(message);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   if (loading) {
@@ -92,6 +106,23 @@ function ProfilePage() {
 
   return (
     <div className="flex h-screen">
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Message"
+        className="bg-white p-8 rounded-lg shadow-lg mx-auto my-16 w-1/3 text-center animate__animated animate__fadeInDown"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <h2 className="text-lg font-semibold mb-4">Message</h2>
+        <p>{modalMessage}</p>
+        <button
+          className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg"
+          onClick={closeModal}
+        >
+          Close
+        </button>
+      </Modal>
+
       {/* Sidebar */}
       <aside className="w-1/4 bg-white shadow-lg flex flex-col items-center py-8">
         <div className="relative">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DeliveryboyDashboard = () => {
   const [orders, setOrders] = useState([
@@ -33,6 +34,8 @@ const DeliveryboyDashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOtpDialog, setShowOtpDialog] = useState(false);
   const [actionType, setActionType] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [openToWork, setOpenToWork] = useState(
     JSON.parse(localStorage.getItem("openToWork")) ?? true
   );
@@ -59,13 +62,25 @@ const DeliveryboyDashboard = () => {
       if (otpInput === selectedOrder.otp) {
         const newStatus = actionType === "accept" ? "Accepted" : "Cancelled";
         updateOrderStatus(selectedOrder.id, newStatus);
+        showModalMessage(`Order ${newStatus} Successfully!`);
       } else {
-        alert("Invalid OTP. Please try again.");
+        showModalMessage("Invalid OTP. Please try again.");
       }
       closeOtpDialog();
     }
   };
 
+<<<<<<< HEAD
+=======
+  // Show Modal Message
+  const showModalMessage = (message) => {
+    setModalMessage(message);
+    setShowModal(true);
+    setTimeout(() => setShowModal(false), 3000);
+  };
+
+  // Update Order Status
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const updateOrderStatus = (id, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -74,6 +89,16 @@ const DeliveryboyDashboard = () => {
     );
   };
 
+<<<<<<< HEAD
+=======
+  // Take for Delivery
+  const takeForDelivery = (order) => {
+    updateOrderStatus(order.id, "Out for Delivery");
+    showModalMessage("Order taken for delivery!");
+  };
+
+  // Format Date and Time
+>>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return new Intl.DateTimeFormat("en-IN", {
@@ -174,10 +199,16 @@ const DeliveryboyDashboard = () => {
                       ✅
                     </button>
                     <button
-                      className="text-red-600 text-xl hover:scale-110 transition-all"
+                      className="mr-3 text-red-600 text-xl hover:scale-110 transition-all"
                       onClick={() => openOtpDialog(order, "cancel")}
                     >
                       ❌
+                    </button>
+                    <button
+                      className="text-blue-600 text-xl hover:scale-110 transition-all"
+                      onClick={() => takeForDelivery(order)}
+                    >
+                      🚚
                     </button>
                   </td>
                 </tr>
@@ -187,29 +218,55 @@ const DeliveryboyDashboard = () => {
         </div>
 
         {/* OTP Dialog */}
-        {showOtpDialog && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow">
-              <h3 className="text-xl mb-4">Enter OTP</h3>
-              <input
-                type="text"
-                value={otpInput}
-                onChange={(e) => setOtpInput(e.target.value)}
-                className="border p-2 w-full mb-4"
-                placeholder="Enter OTP"
-              />
-              <button
-                onClick={handleOtpVerification}
-                className="bg-purple-600 text-white px-4 py-2 rounded mr-2"
+        <AnimatePresence>
+          {showOtpDialog && (
+            <motion.div
+              className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-white p-6 rounded shadow"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.8 }}
               >
-                Submit
-              </button>
-              <button onClick={closeOtpDialog} className="text-gray-600">
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+                <h3 className="text-xl mb-4">Enter OTP</h3>
+                <input
+                  type="text"
+                  value={otpInput}
+                  onChange={(e) => setOtpInput(e.target.value)}
+                  className="border p-2 w-full mb-4"
+                  placeholder="Enter OTP"
+                />
+                <button
+                  onClick={handleOtpVerification}
+                  className="bg-purple-600 text-white px-4 py-2 rounded mr-2"
+                >
+                  Submit
+                </button>
+                <button onClick={closeOtpDialog} className="text-gray-600">
+                  Cancel
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Notification Modal */}
+        <AnimatePresence>
+          {showModal && (
+            <motion.div
+              className="fixed bottom-4 right-4 bg-purple-600 text-white p-4 rounded shadow"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              {modalMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
