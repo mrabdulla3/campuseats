@@ -22,7 +22,7 @@ const CampusEats = () => {
         <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">
           What do you feel like having?
         </h2>
-        <div className="grid grid-cols-6 gap-6">
+        <div className="grid grid-cols-6 gap-6 ">
           {[
             {
               name: "Aalo Paratha",
@@ -40,7 +40,7 @@ const CampusEats = () => {
             <button
               key={category.name}
               onClick={() => handleCategoryClick(category.name)}
-              className="relative group bg-purple-50 hover:bg-purple-100 transition transform hover:-translate-y-2 duration-300 shadow-md rounded-lg flex flex-col items-center py-6 cursor-pointer"
+              className="relative group bg-purple-50 hover:bg-purple-100 transition transform hover:-translate-y-2 duration-300 shadow-md rounded-lg flex flex-col items-center  cursor-pointer p-2"
             >
               <img
                 src={category.img}

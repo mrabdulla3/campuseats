@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from 'framer-motion';
-
+import { motion, AnimatePresence } from "framer-motion";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -15,7 +14,6 @@ const Cart = () => {
     visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
     exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
   };
-
 
   useEffect(() => {
     const fetchCartItems = async () => {

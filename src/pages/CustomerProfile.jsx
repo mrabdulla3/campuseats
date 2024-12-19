@@ -8,14 +8,13 @@ function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
-  const [password, setPassword] = useState(""); 
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [userType, setUserType] = useState("");
-  
 
   const token = localStorage.getItem("token");
 
@@ -56,25 +55,32 @@ function ProfilePage() {
       openModal("Please enter your password to confirm changes.");
       return;
     }
-  
+
     try {
       await axios.put(
         "http://localhost:4000/users/profile-update",
-        { ...formData, id: profileData.id,userType, currentPassword: password }, 
+        {
+          ...formData,
+          id: profileData.id,
+          userType,
+          currentPassword: password,
+        },
         {
           headers: { Authorization: token },
         }
       );
       setProfileData(formData);
       setIsEditing(false);
-      setPassword(""); 
+      setPassword("");
       openModal("Profile updated successfully!");
     } catch (err) {
       console.error("Error saving profile data:", err.message);
-      openModal("Failed to update profile. Please check your password and try again.");
+      openModal(
+        "Failed to update profile. Please check your password and try again."
+      );
     }
   };
-  
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -174,9 +180,9 @@ function ProfilePage() {
         </h2>
         <p className="text-gray-500 mb-6">{profileData.email || "N/A"}</p>
         {userType !== "vendor" && (
-        <button className="w-3/4 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg shadow-md">
-          Orders
-        </button>
+          <button className="w-3/4 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg shadow-md">
+            Orders
+          </button>
         )}
       </aside>
 
@@ -245,7 +251,9 @@ function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-gray-600 text-sm mb-1">Address</label>
+              <label className="block text-gray-600 text-sm mb-1">
+                Address
+              </label>
               <input
                 type="text"
                 name="address"
