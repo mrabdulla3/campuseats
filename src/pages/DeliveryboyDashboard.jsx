@@ -37,12 +37,10 @@ const DeliveryboyDashboard = () => {
     JSON.parse(localStorage.getItem("openToWork")) ?? true
   );
 
-  // Persist Open to Work status
   useEffect(() => {
     localStorage.setItem("openToWork", JSON.stringify(openToWork));
   }, [openToWork]);
 
-  // Open OTP Dialog
   const openOtpDialog = (order, action) => {
     setSelectedOrder(order);
     setShowOtpDialog(true);
@@ -50,14 +48,12 @@ const DeliveryboyDashboard = () => {
     setOtpInput("");
   };
 
-  // Close OTP Dialog
   const closeOtpDialog = () => {
     setShowOtpDialog(false);
     setSelectedOrder(null);
     setActionType("");
   };
 
-  // Handle OTP Verification
   const handleOtpVerification = () => {
     if (selectedOrder) {
       if (otpInput === selectedOrder.otp) {
@@ -70,7 +66,6 @@ const DeliveryboyDashboard = () => {
     }
   };
 
-  // Update Order Status
   const updateOrderStatus = (id, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -79,7 +74,6 @@ const DeliveryboyDashboard = () => {
     );
   };
 
-  // Format Date and Time
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return new Intl.DateTimeFormat("en-IN", {
@@ -88,12 +82,10 @@ const DeliveryboyDashboard = () => {
     }).format(date);
   };
 
-  // Filter Orders
   const filteredOrders = orders.filter((order) =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Summary Metrics
   const totalOrders = orders.length;
   const totalAmount = orders.reduce((sum, order) => sum + parseFloat(order.total), 0);
   const penaltyAmount = orders.filter((order) => order.status === "Cancelled").length * 5;

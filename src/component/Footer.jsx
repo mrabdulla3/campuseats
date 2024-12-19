@@ -66,7 +66,7 @@ const Footer = () => {
 
         {/* Display IP Address */}
         <div className="text-center text-gray-500 text-sm mt-4">
-          <p>Host IP Address: {hostIp}</p>
+          <p>Host IP A {hostIp}</p>
         </div>
       </footer>
     </div>

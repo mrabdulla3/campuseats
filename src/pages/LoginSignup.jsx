@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -8,12 +8,12 @@ const LoginSignup = () => {
     name: "",
     email: "",
     password: "",
-    userType: "user", 
+    userType: "user",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -38,22 +38,21 @@ const LoginSignup = () => {
           formData.userType === "vendor"
             ? "http://localhost:4000/vendors/signup-vendor"
             : "http://localhost:4000/users/signup-customer";
-  
-        // Make the API call
+
         const response = await axios.post(endpoint, {
           name: formData.name,
           email: formData.email,
           password: formData.password,
           userType: formData.userType,
         });
-  
+
         setSuccess(response.data.message || "Registration successful!");
         localStorage.setItem("userType", formData.userType);
-  
+
         if (formData.userType === "vendor") {
-          navigate("/dashboard");  
+          navigate("/dashboard");
         } else {
-          navigate("/"); 
+          navigate("/");
         }
       } else {
         const { email, password } = formData;
@@ -61,13 +60,13 @@ const LoginSignup = () => {
           email,
           password,
         });
-  
+
         setSuccess(response.data.message || "Login successful!");
         localStorage.setItem("token", response.data.token);
-  
-        const userType = response.data.userType; 
+
+        const userType = response.data.userType;
         localStorage.setItem("userType", userType);
-  
+
         if (userType === "vendor") {
           navigate("/dashboard");
         } else {
@@ -77,7 +76,7 @@ const LoginSignup = () => {
     } catch (error) {
       setError(error.response?.data?.message || "An error occurred");
     }
-  };  
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-purple-50">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden flex">
@@ -99,10 +98,15 @@ const LoginSignup = () => {
         <div className="w-1/2 p-8">
           {isSignup ? (
             <>
-              <h2 className="text-2xl font-bold text-purple-600 mb-6">Sign Up</h2>
+              <h2 className="text-2xl font-bold text-purple-600 mb-6">
+                Sign Up
+              </h2>
               <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Name
                   </label>
                   <input
@@ -114,7 +118,10 @@ const LoginSignup = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Email
                   </label>
                   <input
@@ -126,7 +133,10 @@ const LoginSignup = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Password
                   </label>
                   <input
@@ -138,7 +148,10 @@ const LoginSignup = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="userType" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="userType"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     User Type
                   </label>
                   <select
@@ -162,10 +175,15 @@ const LoginSignup = () => {
             </>
           ) : (
             <>
-              <h2 className="text-2xl font-bold text-purple-600 mb-6">Sign In</h2>
+              <h2 className="text-2xl font-bold text-purple-600 mb-6">
+                Sign In
+              </h2>
               <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Email
                   </label>
                   <input
@@ -177,7 +195,10 @@ const LoginSignup = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Password
                   </label>
                   <input

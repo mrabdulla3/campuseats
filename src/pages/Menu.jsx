@@ -7,7 +7,8 @@ import img5 from "../assets/5.jpg";
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [userType, setUserType] = useState(""); 
+  const [userType, setUserType] = useState("");
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
@@ -21,7 +22,7 @@ const Menu = () => {
         const images = [img1, img2, img3, img4, img5];
         const menuWithImages = data.map((item, index) => ({
           ...item,
-          image: images[index % images.length], 
+          image: images[index % images.length],
         }));
 
         setMenuItems(menuWithImages);
@@ -41,14 +42,41 @@ const Menu = () => {
     console.log(`Delete item with ID: ${itemId}`);
     try {
       await fetch(`http://localhost:4000/menu/${itemId}`, { method: "DELETE" });
-      setMenuItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+      setMenuItems((prevItems) =>
+        prevItems.filter((item) => item.id !== itemId)
+      );
     } catch (error) {
       console.error("Error deleting item:", error);
     }
   };
 
-  const handleAddToCart = (itemId) => {
-    console.log(`Add item with ID: ${itemId} to cart`);
+  const handleAddToCart = async (menu_id) => {
+    const order_id = Date.now(); 
+    const quantity = 1; 
+
+    const selectedItem = menuItems.find((item) => item.id === menu_id);
+    if (!selectedItem) return;
+
+    const price = selectedItem.price;
+
+    const cartItem = { order_id, menu_id, quantity, price };
+
+    try {
+      const response = await fetch("http://localhost:4000/order_items/add-to-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cartItem),
+      });
+
+      if (response.ok) {
+        alert("Item added to cart successfully!");
+        setCart((prevCart) => [...prevCart, cartItem]); // Update local cart
+      } else {
+        console.error("Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
   };
 
   return (
@@ -87,30 +115,13 @@ const Menu = () => {
                     </span>
                   ))}
                 </div>
-                {/* Conditional Buttons */}
-                {userType === "vendor" ? (
-                  <div className="flex justify-between mt-4">
-                    <button
-                      onClick={() => handleEdit(item.id)}
-                      className="bg-blue-500 text-white text-sm py-2 px-3 rounded-md hover:bg-blue-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="bg-red-500 text-white text-sm py-2 px-3 rounded-md hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => handleAddToCart(item.id)}
-                    className="w-full mt-4 bg-purple-500 text-white text-sm py-2 px-3 rounded-md hover:bg-purple-600"
-                  >
-                    Add to Cart
-                  </button>
-                )}
+
+                <button
+                  onClick={() => handleAddToCart(item.id)}
+                  className="w-full mt-4 bg-purple-500 text-white text-sm py-2 px-3 rounded-md hover:bg-purple-600"
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}

@@ -21,7 +21,6 @@ function ProfilePage() {
             headers: { Authorization: token },
           }
         );
-        console.log("Fetched profile data:", response.data); 
         setProfileData(response.data);
         setFormData(response.data);
         setLoading(false);
@@ -199,7 +198,7 @@ function ProfilePage() {
             <div>
               <label className="block text-gray-600 text-sm mb-1">Phone</label>
               <input
-                type="text"
+                type="tel"
                 name="phone"
                 value={formData.phone || ""}
                 onChange={handleChange}
