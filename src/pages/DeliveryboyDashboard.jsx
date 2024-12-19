@@ -70,8 +70,6 @@ const DeliveryboyDashboard = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   // Show Modal Message
   const showModalMessage = (message) => {
     setModalMessage(message);
@@ -80,7 +78,6 @@ const DeliveryboyDashboard = () => {
   };
 
   // Update Order Status
->>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const updateOrderStatus = (id, newStatus) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -89,8 +86,6 @@ const DeliveryboyDashboard = () => {
     );
   };
 
-<<<<<<< HEAD
-=======
   // Take for Delivery
   const takeForDelivery = (order) => {
     updateOrderStatus(order.id, "Out for Delivery");
@@ -98,7 +93,6 @@ const DeliveryboyDashboard = () => {
   };
 
   // Format Date and Time
->>>>>>> cd3fb664cdf6314792ef424f772089a5af54e279
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return new Intl.DateTimeFormat("en-IN", {
@@ -112,18 +106,30 @@ const DeliveryboyDashboard = () => {
   );
 
   const totalOrders = orders.length;
-  const totalAmount = orders.reduce((sum, order) => sum + parseFloat(order.total), 0);
-  const penaltyAmount = orders.filter((order) => order.status === "Cancelled").length * 5;
-  const acceptedOrders = orders.filter((order) => order.status === "Accepted").length;
-  const pendingOrders = orders.filter((order) => order.status === "Pending").length;
-  const cancelledOrders = orders.filter((order) => order.status === "Cancelled").length;
+  const totalAmount = orders.reduce(
+    (sum, order) => sum + parseFloat(order.total),
+    0
+  );
+  const penaltyAmount =
+    orders.filter((order) => order.status === "Cancelled").length * 5;
+  const acceptedOrders = orders.filter(
+    (order) => order.status === "Accepted"
+  ).length;
+  const pendingOrders = orders.filter(
+    (order) => order.status === "Pending"
+  ).length;
+  const cancelledOrders = orders.filter(
+    (order) => order.status === "Cancelled"
+  ).length;
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-full lg:w-64 bg-purple-700 text-white p-6">
         <h2 className="text-2xl font-bold mb-4">Welcome</h2>
-        <p className="text-lg mb-2"><strong>Rahul Sharma</strong></p>
+        <p className="text-lg mb-2">
+          <strong>Rahul Sharma</strong>
+        </p>
         <p className="text-sm text-gray-300 mb-4">Contact: +91 98765XXXXX</p>
         <div className="flex items-center">
           <span className="mr-3">Open to Work</span>
@@ -134,9 +140,15 @@ const DeliveryboyDashboard = () => {
               onChange={() => setOpenToWork(!openToWork)}
               className="hidden"
             />
-            <span className={`block w-full h-full rounded-full ${openToWork ? "bg-green-500" : "bg-gray-400"} transition-all duration-300`}></span>
             <span
-              className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transform transition-transform duration-300 ${openToWork ? "translate-x-6" : ""}`}
+              className={`block w-full h-full rounded-full ${
+                openToWork ? "bg-green-500" : "bg-gray-400"
+              } transition-all duration-300`}
+            ></span>
+            <span
+              className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transform transition-transform duration-300 ${
+                openToWork ? "translate-x-6" : ""
+              }`}
             ></span>
           </label>
         </div>
@@ -154,7 +166,10 @@ const DeliveryboyDashboard = () => {
             { label: "Pending Orders", value: pendingOrders },
             { label: "Cancelled Orders", value: cancelledOrders },
           ].map((card, index) => (
-            <div key={index} className="bg-white p-4 shadow rounded text-center">
+            <div
+              key={index}
+              className="bg-white p-4 shadow rounded text-center"
+            >
               <h3 className="text-gray-600">{card.label}</h3>
               <p className="text-2xl font-bold">{card.value}</p>
             </div>
@@ -177,18 +192,33 @@ const DeliveryboyDashboard = () => {
           <table className="min-w-full table-auto">
             <thead className="bg-purple-600 text-white">
               <tr>
-                {["Order ID", "Restaurant", "Customer", "Order Date", "Amount", "Status", "Actions"].map((head) => (
-                  <th key={head} className="py-3 px-4 text-left">{head}</th>
+                {[
+                  "Order ID",
+                  "Restaurant",
+                  "Customer",
+                  "Order Date",
+                  "Amount",
+                  "Status",
+                  "Actions",
+                ].map((head) => (
+                  <th key={head} className="py-3 px-4 text-left">
+                    {head}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50 border-b transition-all duration-300">
+                <tr
+                  key={order.id}
+                  className="hover:bg-gray-50 border-b transition-all duration-300"
+                >
                   <td className="py-3 px-4">{order.orderId}</td>
                   <td className="py-3 px-4">{order.restaurantName}</td>
                   <td className="py-3 px-4">{order.customerName}</td>
-                  <td className="py-3 px-4">{formatDateTime(order.orderDateTime)}</td>
+                  <td className="py-3 px-4">
+                    {formatDateTime(order.orderDateTime)}
+                  </td>
                   <td className="py-3 px-4">₹{order.total}</td>
                   <td className="py-3 px-4">{order.status}</td>
                   <td className="py-3 px-4">

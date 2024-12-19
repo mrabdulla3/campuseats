@@ -5,10 +5,11 @@ import Modal from "react-modal";
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
-  const [userId, setUserId] = useState(""); // State to store the current user ID
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Modal state
+  const [userId, setUserId] = useState("");
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // Use location to detect route changes
+  const location = useLocation();
+  const [searchQuery, setSearchQuery]=useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -16,18 +17,18 @@ const Navbar = () => {
     const storedUserType = localStorage.getItem("userType");
     setUserType(storedUserType || "");
 
-    const storedUserId = localStorage.getItem("id"); // Assuming 'userId' is stored in localStorage
+    const storedUserId = localStorage.getItem("id");
     setUserId(storedUserId || "");
-  }, [location]); // Dependency on location, so it runs when the route changes
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
-    localStorage.removeItem("id"); // Clear the user ID as well
+    localStorage.removeItem("id");
     setIsLoggedIn(false);
-    setIsLogoutModalOpen(false); // Close the modal
+    setIsLogoutModalOpen(false);
     navigate("/login");
-    window.location.reload(); // Reload the page to reflect logout state
+    window.location.reload();
   };
 
   const closeModal = () => {
@@ -37,35 +38,46 @@ const Navbar = () => {
   const openModal = () => {
     setIsLogoutModalOpen(true);
   };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`/search-results?query=${encodeURIComponent(searchQuery)}`);
+    setSearchQuery("");
+  };
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
       {/* Logo */}
-      <Link to="/">
-        <div className="text-2xl font-bold text-purple-700">CampusEats</div>
-      </Link>
+
+      <div className="text-2xl font-bold text-purple-700">CampusEats</div>
 
       {/* Search Bar */}
       {userType !== "vendor" && (
-        <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-lg">
+        <form
+          onSubmit={handleSearch}
+          className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-lg"
+        >
           <input
             type="text"
             placeholder="Search for food or restaurants"
             className="flex-grow outline-none text-gray-700"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-gray-500 cursor-pointer"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9 3a6 6 0 100 12 6 6 0 000-12zM2 9a7 7 0 1112.39 4.56l4.27 4.27a1 1 0 01-1.42 1.42l-4.27-4.27A7 7 0 012 9z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
+          <button type="submit">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-500 cursor-pointer"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 3a6 6 0 100 12 6 6 0 000-12zM2 9a7 7 0 1112.39 4.56l4.27 4.27a1 1 0 01-1.42 1.42l-4.27-4.27A7 7 0 012 9z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </form>
       )}
 
       {/* Navigation Links */}
