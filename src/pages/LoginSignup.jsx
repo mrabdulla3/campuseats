@@ -118,7 +118,7 @@ const LoginSignup = () => {
         {/* Left Panel */}
         <div className="w-1/2 bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-8 flex flex-col items-center justify-center">
           <h2 className="text-5xl font-extrabold mb-6 animate-fadeIn">
-            {isSignup ? "Sign Up" : "Sign In"}
+            {isSignup ? "REGISTER" : "LOGIN"}
           </h2>
           <p className="text-lg mb-8 text-center px-6 animate-fadeIn">
             {isSignup
@@ -129,7 +129,7 @@ const LoginSignup = () => {
             onClick={() => setIsSignup(!isSignup)}
             className="bg-white text-purple-600 px-8 py-2 rounded-full font-bold hover:bg-gray-200 shadow-md animate-bounce"
           >
-            {isSignup ? "SIGN IN" : "REGISTER"}
+            {isSignup ? "LOGIN" : "REGISTER"}
           </button>
         </div>
 
