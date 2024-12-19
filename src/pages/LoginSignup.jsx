@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
@@ -12,6 +13,8 @@ const LoginSignup = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -54,14 +57,12 @@ const LoginSignup = () => {
         });
 
         setSuccess(response.data.message || "Registration successful!");
+        setModalMessage("Registration successful! Please log in to continue.");
+        openModal();
         localStorage.setItem("userType", formData.userType);
-        localStorage.setItem("id", response.data.id);//change by Tushar
-  
-        if (formData.userType === "vendor") {
-          navigate("/dashboard");  
-        } else {
-          navigate("/"); 
-        }
+        localStorage.setItem("id", response.data.id);
+
+        navigate("/login");
       } else {
         const { email, password } = formData;
         const response = await axios.post("http://localhost:4000/users/login", {
@@ -70,15 +71,19 @@ const LoginSignup = () => {
         });
 
         setSuccess(response.data.message || "Login successful!");
+        setModalMessage("Login successful!");
+        openModal();
         localStorage.setItem("token", response.data.token);
         const userType = response.data.userType;
         localStorage.setItem("userType", userType);
-        localStorage.setItem("id", response.data.id);//change by Tushar
+        localStorage.setItem("id", response.data.id);
+
         if (userType === "vendor") {
           navigate("/dashboard");
-          localStorage.setItem("id", response.data.id);
+          window.location.reload();
         } else {
           navigate("/");
+          window.location.reload();
         }
       }
     } catch (error) {
@@ -97,6 +102,14 @@ const LoginSignup = () => {
       default:
         return "http://localhost:4000/users/signup-customer";
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -197,6 +210,23 @@ const LoginSignup = () => {
           {success && <p className="text-green-500 mt-4">{success}</p>}
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto mt-20"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-indigo-600">Message</h2>
+        <p className="text-gray-800">{modalMessage}</p>
+        <button
+          onClick={closeModal}
+          className="mt-6 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700"
+        >
+          Close
+        </button>
+      </Modal>
     </div>
   );
 };
